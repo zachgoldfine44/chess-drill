@@ -36,6 +36,8 @@
 const { useState, useEffect, useCallback, useRef, useMemo } = React;
 
 const P = { K:"♔",Q:"♕",R:"♖",B:"♗",N:"♘",P:"♙",k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟" };
+const PIECE_IMG_CODE = { K:'wk',Q:'wq',R:'wr',B:'wb',N:'wn',P:'wp',k:'bk',q:'bq',r:'br',b:'bb',n:'bn',p:'bp' };
+const pieceImgUrl = p => `https://images.chesscomfiles.com/chess-themes/pieces/neo/150/${PIECE_IMG_CODE[p]}.png`;
 const INIT_BOARD = () => [
   ["r","n","b","q","k","b","n","r"],["p","p","p","p","p","p","p","p"],
   [null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],
@@ -420,14 +422,8 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
   const cols = flipped ? [7,6,5,4,3,2,1,0] : [0,1,2,3,4,5,6,7];
 
   return (
-    <div ref={containerRef} className="relative" style={{width:SZ*8+6,height:SZ*8+6,maxWidth:"calc(100vw - 24px)",margin:"0 auto"}}>
-      {/* Outer frame */}
-      <div className="absolute inset-0 rounded-xl" style={{
-        background:"linear-gradient(145deg, #3D3580 0%, #2D2B6B 50%, #1E1C52 100%)",
-        boxShadow:"0 8px 32px rgba(45,43,107,0.4), 0 2px 8px rgba(0,0,0,0.15)",
-        padding:3, borderRadius:14
-      }}>
-        <div className="rounded-lg overflow-hidden relative" style={{width:SZ*8,height:SZ*8}}>
+    <div ref={containerRef} className="relative" style={{width:SZ*8,height:SZ*8,maxWidth:"calc(100vw - 24px)",margin:"0 auto"}}>
+      <div style={{boxShadow:"0 4px 16px rgba(0,0,0,0.25)",borderRadius:4,overflow:"hidden",position:"relative",width:SZ*8,height:SZ*8}}>
           {/* Board squares */}
           {rows.map((r,ri) => cols.map((c,ci) => {
             const isLight = (r+c)%2===0;
@@ -439,9 +435,9 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
             const isCorrect = correctSquare && correctSquare[0]===r && correctSquare[1]===c;
             const isCorrectFrom = correctFrom && correctFrom[0]===r && correctFrom[1]===c;
             // Colors
-            const lightSq = "#F7E8D0"; const darkSq = "#5B4DA0";
-            const lightHi = "#FBBF24"; const darkHi = "#A78BFA";
-            const selColor = "#38BDF8";
+            const lightSq = "#EBECD0"; const darkSq = "#779556";
+            const lightHi = "#F6F669"; const darkHi = "#BBCC44";
+            const selColor = "#BBCC44";
             let bg = isLight ? lightSq : darkSq;
             if (isLastFrom || isLastTo) bg = isLight ? lightHi : darkHi;
             if (isSel) bg = selColor;
@@ -521,31 +517,26 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
                 {piece && (
                   <div style={{
                     position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center",
-                    fontSize: SZ * 0.72,
-                    lineHeight:1,
                     transition: "transform 0.15s ease",
-                    transform: isSel ? "scale(1.12)" : "scale(1)",
+                    transform: isSel ? "scale(1.08)" : "scale(1)",
                     zIndex: isSel ? 10 : 2,
-                    filter: piece === piece.toUpperCase()
-                      ? "drop-shadow(1px 2px 3px rgba(45,43,107,0.35))"
-                      : "drop-shadow(1px 2px 3px rgba(0,0,0,0.5))",
                     userSelect:"none",
                     pointerEvents:"none",
-                  }}>{P[piece]}</div>
+                  }}><img src={pieceImgUrl(piece)} alt="" style={{width:SZ*0.9,height:SZ*0.9,pointerEvents:"none",userSelect:"none"}} draggable={false}/></div>
                 )}
                 {/* Coordinates */}
                 {ci === 0 && (
                   <span style={{
                     position:"absolute", top:2, left:3, fontSize:10, fontWeight:700,
-                    color: isLight ? darkSq : lightSq, opacity:0.6, userSelect:"none", pointerEvents:"none",
-                    fontFamily:"'Courier New',monospace",
+                    color: isLight ? "#779556" : "#EBECD0", opacity:0.8, userSelect:"none", pointerEvents:"none",
+                    fontFamily:"'Noto Sans','Segoe UI',sans-serif",
                   }}>{8-r}</span>
                 )}
                 {ri === 7 && (
                   <span style={{
                     position:"absolute", bottom:1, right:3, fontSize:10, fontWeight:700,
-                    color: isLight ? darkSq : lightSq, opacity:0.6, userSelect:"none", pointerEvents:"none",
-                    fontFamily:"'Courier New',monospace",
+                    color: isLight ? "#779556" : "#EBECD0", opacity:0.8, userSelect:"none", pointerEvents:"none",
+                    fontFamily:"'Noto Sans','Segoe UI',sans-serif",
                   }}>{String.fromCharCode(97+c)}</span>
                 )}
               </div>
