@@ -4,9 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>â Opening Trainer</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%232D2B6B'/><rect x='15' y='15' width='150' height='150' rx='28' fill='%23F5F0E8'/><path d='M90 30 C60 30 40 55 40 80 C40 95 50 108 65 115 L60 140 L120 140 L115 115 C130 108 140 95 140 80 C140 55 120 30 90 30Z' fill='%235B4DA0'/><circle cx='80' cy='65' r='8' fill='%23F5F0E8'/><path d='M70 90 Q90 110 110 90' stroke='%23E8722A' stroke-width='5' fill='none' stroke-linecap='round'/><rect x='55' y='135' width='70' height='12' rx='6' fill='%23E8722A'/></svg>"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%232D2B6B'/><text x='16' y='24' text-anchor='middle' font-size='22' fill='%23F5F0E8'>&#9822;</text></svg>"/>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F5F0E8">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f0d0a; overflow-x: hidden; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #F5F0E8; overflow-x: hidden; color: #1A1A2E; }
   .flex { display:flex; } .flex-col { flex-direction:column; } .items-center { align-items:center; }
   .justify-center { justify-content:center; } .justify-between { justify-content:space-between; }
   .gap-1\.5 { gap:6px; } .gap-2 { gap:8px; } .gap-3 { gap:12px; } .gap-4 { gap:16px; }
@@ -378,11 +383,11 @@ const initSR = () => { const d = {}; OPENINGS.forEach(o => { d[o.id] = {box:1,co
 const boxIntervals = {1:1,2:2,3:4,4:8,5:16};
 const boxLabels = {1:"New",2:"Learning",3:"Familiar",4:"Solid",5:"Mastered"};
 const boxColors = {
-  1:{bg:"#3f1515",border:"#ef4444",text:"#fca5a5",dot:"#f87171"},
-  2:{bg:"#3f2415",border:"#f97316",text:"#fdba74",dot:"#fb923c"},
-  3:{bg:"#3f3515",border:"#eab308",text:"#fde047",dot:"#facc15"},
-  4:{bg:"#153f1f",border:"#22c55e",text:"#86efac",dot:"#4ade80"},
-  5:{bg:"#15303f",border:"#06b6d4",text:"#67e8f9",dot:"#22d3ee"},
+  1:{bg:"#FEE2E2",border:"#EF4444",text:"#DC2626",dot:"#EF4444"},
+  2:{bg:"#FFF7ED",border:"#E8722A",text:"#C2410C",dot:"#E8722A"},
+  3:{bg:"#FEF9C3",border:"#EAB308",text:"#A16207",dot:"#EAB308"},
+  4:{bg:"#DCFCE7",border:"#22C55E",text:"#15803D",dot:"#22C55E"},
+  5:{bg:"#E0F2FE",border:"#0EA5E9",text:"#0369A1",dot:"#0EA5E9"},
 };
 const getNextDrill = (sr, session) => {
   const due = OPENINGS.filter(o => { const s = sr[o.id]; return s && session - s.lastDrilled >= boxIntervals[s.box]; });
@@ -418,8 +423,8 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
     <div ref={containerRef} className="relative" style={{width:SZ*8+6,height:SZ*8+6,maxWidth:"calc(100vw - 24px)",margin:"0 auto"}}>
       {/* Outer frame */}
       <div className="absolute inset-0 rounded-xl" style={{
-        background:"linear-gradient(145deg, #8B6914 0%, #5C3D1E 50%, #3A2510 100%)",
-        boxShadow:"0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)",
+        background:"linear-gradient(145deg, #3D3580 0%, #2D2B6B 50%, #1E1C52 100%)",
+        boxShadow:"0 8px 32px rgba(45,43,107,0.4), 0 2px 8px rgba(0,0,0,0.15)",
         padding:3, borderRadius:14
       }}>
         <div className="rounded-lg overflow-hidden relative" style={{width:SZ*8,height:SZ*8}}>
@@ -434,9 +439,9 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
             const isCorrect = correctSquare && correctSquare[0]===r && correctSquare[1]===c;
             const isCorrectFrom = correctFrom && correctFrom[0]===r && correctFrom[1]===c;
             // Colors
-            const lightSq = "#F0D9B5"; const darkSq = "#B58863";
-            const lightHi = "#F7EC7D"; const darkHi = "#DAC34B";
-            const selColor = "#7FC8E3";
+            const lightSq = "#F7E8D0"; const darkSq = "#5B4DA0";
+            const lightHi = "#FBBF24"; const darkHi = "#A78BFA";
+            const selColor = "#38BDF8";
             let bg = isLight ? lightSq : darkSq;
             if (isLastFrom || isLastTo) bg = isLight ? lightHi : darkHi;
             if (isSel) bg = selColor;
@@ -449,12 +454,7 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
                   cursor: "pointer",
                   transition: "background-color 0.12s ease",
                 }}>
-                {/* Wood grain texture overlay */}
-                <div style={{
-                  position:"absolute", inset:0, opacity: isLight ? 0.03 : 0.06,
-                  background: `repeating-linear-gradient(${isLight?90:85}deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 3px)`,
-                  pointerEvents:"none"
-                }}/>
+
                 {/* Wrong move indicator â red glow */}
                 {isWrong && (
                   <div style={{
@@ -527,8 +527,8 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
                     transform: isSel ? "scale(1.12)" : "scale(1)",
                     zIndex: isSel ? 10 : 2,
                     filter: piece === piece.toUpperCase()
-                      ? "drop-shadow(1px 2px 2px rgba(0,0,0,0.25))"
-                      : "drop-shadow(1px 2px 3px rgba(0,0,0,0.45))",
+                      ? "drop-shadow(1px 2px 3px rgba(45,43,107,0.35))"
+                      : "drop-shadow(1px 2px 3px rgba(0,0,0,0.5)),"
                     userSelect:"none",
                     pointerEvents:"none",
                   }}>{P[piece]}</div>
@@ -615,14 +615,14 @@ const DrillView = ({ opening, sr, setSR, session, onBack }) => {
       <div className="w-full flex items-center justify-between">
         <button onClick={onBack} className="px-3 py-1.5 rounded-lg text-sm font-semibold transition-all hover:translate-x-[-2px]" style={{background:"rgba(255,255,255,0.08)",color:"#d6d3d1",border:"1px solid rgba(255,255,255,0.08)"}}>â Back</button>
         <div className="text-center">
-          <div className="text-lg font-bold" style={{color:"#fafaf9",letterSpacing:"-0.02em"}}>{opening.name}</div>
-          <div style={{fontSize:12,color:"#a8a29e"}}>{opening.color === "white" ? "â" : "â"} {opening.eco}{branchName&&<span style={{color:"#fbbf24",marginLeft:6}}>â {branchName}</span>}</div>
+          <div className="text-lg font-bold" style={{color:"#2D2B6B",letterSpacing:"-0.02em",fontWeight:800}}>{opening.name}</div>
+          <div style={{fontSize:12,color:"#8B8BA0"}}>{opening.color === "white" ? "â" : "â"} {opening.eco}{branchName&&<span style={{color:"#E8722A",fontWeight:600,marginLeft:6}}>â {branchName}</span>}</div>
         </div>
-        <div style={{padding:"4px 10px",borderRadius:6,fontSize:12,fontWeight:700,background:bc.bg,color:bc.text,border:`1px solid ${bc.border}`}}>{boxLabels[srData.box]}</div>
+        <div style={{padding:"4px 10px",borderRadius:99,fontSize:12,fontWeight:700,background:bc.bg,color:bc.text,border:`1.5px solid ${bc.border}`}}>{boxLabels[srData.box]}</div>
       </div>
-      <div className="w-full" style={{padding:"10px 14px",borderRadius:10,background:"rgba(180,130,40,0.1)",border:"1px solid rgba(180,130,40,0.2)",color:"#fcd34d",fontSize:13}}>ð¡ {currentTip}</div>
+      <div className="w-full" style={{padding:"10px 14px",borderRadius:10,background:"#FFF7ED",border:"1.5px solid #FBBF2440",color:"#92400E",fontSize:13,fontWeight:500}}>ð¡ {currentTip}</div>
       {opening.branchAt!==undefined&&moveIndex>=opening.branchAt&&activeBranch===null&&status==="playing"&&(
-        <div className="w-full" style={{padding:"10px 14px",borderRadius:10,background:"rgba(124,58,237,0.12)",border:"1px solid rgba(124,58,237,0.25)",color:"#c4b5fd",fontSize:13}}>ð Branch! Choose: {opening.branches.map(b=>b.name).join(" or ")}</div>
+        <div className="w-full" style={{padding:"10px 14px",borderRadius:10,background:"#F3F0FF",border:"1.5px solid #7C3AED40",color:"#5B21B6",fontSize:13,fontWeight:500}}>ð Branch! Choose: {opening.branches.map(b=>b.name).join(" or ")}</div>
       )}
       <div className="relative">
         <ChessBoard board={board} flipped={!isUserWhite} selected={selected} onSquareClick={handleSquareClick} lastMove={lastMove} wrongMove={wrongMove} correctSquare={correctSquare} correctFrom={correctFrom} correctSan={correctSan}/>
@@ -632,18 +632,18 @@ const DrillView = ({ opening, sr, setSR, session, onBack }) => {
             <div style={{fontSize:22,fontWeight:800,color:"white"}}>{mistakes===0?"Perfect!":mistakes<=2?"Good job!":"Keep practicing!"}</div>
             <div style={{fontSize:14,color:"#a8a29e"}}>{mistakes} mistake{mistakes!==1?"s":""}</div>
             <div className="flex gap-2 mt-2">
-              <button onClick={handleRestart} style={{padding:"8px 20px",borderRadius:10,background:"linear-gradient(135deg,#d97706,#b45309)",color:"white",fontWeight:600,fontSize:14,border:"none",cursor:"pointer"}}>Drill Again</button>
-              <button onClick={onBack} style={{padding:"8px 20px",borderRadius:10,background:"rgba(255,255,255,0.1)",color:"white",fontWeight:600,fontSize:14,border:"none",cursor:"pointer"}}>Back</button>
+              <button onClick={handleRestart} style={{padding:"8px 20px",borderRadius:10,background:"#E8722A",color:"white",fontWeight:700,fontSize:14,border:"none",cursor:"pointer"}}>Drill Again</button>
+              <button onClick={onBack} style={{padding:"8px 20px",borderRadius:10,background:"rgba(255,255,255,0.15)",color:"white",fontWeight:700,fontSize:14,border:"none",cursor:"pointer"}}>Back</button>
             </div>
           </div>
         )}
       </div>
       <div className="w-full flex items-center justify-between gap-3">
-        <div style={{flex:1,fontSize:13,color:"#d6d3d1",fontFamily:"'Courier New',monospace",background:"rgba(0,0,0,0.2)",borderRadius:8,padding:"8px 12px",minHeight:36,overflowX:"auto",whiteSpace:"nowrap"}}>
-          {fmtH.length>0?fmtH.join("  "):<span style={{color:"#78716c",fontStyle:"italic"}}>Your move...</span>}
+        <div style={{flex:1,fontSize:13,color:"#2D2B6B",fontFamily:"'SF Mono','Courier New',monospace",background:"#FFFFFF",borderRadius:10,padding:"8px 12px",boxShadow:"0 1px 3px rgba(45,43,107,0.06)",minHeight:36,overflowX:"auto",whiteSpace:"nowrap"}}>
+          {fmtH.length>0?fmtH.join("  "):<span style={{color:"#8B8BA0",fontStyle:"italic"}}>Your move...</span>}
         </div>
         {status==="playing"&&isUserTurn(moveIndex)&&(
-          <button onClick={hint} style={{padding:"6px 14px",borderRadius:8,background:"rgba(255,255,255,0.08)",color:"#a8a29e",fontSize:13,border:"1px solid rgba(255,255,255,0.06)",cursor:"pointer",flexShrink:0}}>
+          <button onClick={hint} style={{padding:"6px 14px",borderRadius:8,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",flexShrink:0,boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>
             {showHint?`Play ${opening.branchAt===moveIndex&&activeBranch===null?opening.branches.map(b=>b.continuation[0].san).join("/"):currentExpected?.san}`:"Hint ð¡"}
           </button>
         )}
@@ -770,47 +770,48 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
       <div className="w-full flex items-center justify-between">
         <button onClick={onBack} style={{padding:"6px 14px",borderRadius:8,background:"rgba(255,255,255,0.08)",color:"#d6d3d1",fontSize:13,fontWeight:600,border:"1px solid rgba(255,255,255,0.06)",cursor:"pointer"}}>â Back</button>
         <div className="text-center">
-          <div style={{fontSize:18,fontWeight:800,color:"#fafaf9",display:"flex",alignItems:"center",gap:8,justifyContent:"center"}}>
-            <span style={{color:"#a78bfa"}}>ð²</span> Blind Drill <span style={{fontSize:11,fontWeight:400,color:"#78716c",background:"rgba(255,255,255,0.05)",padding:"2px 8px",borderRadius:99}}>#{roundCount}</span>
+          <div style={{fontSize:18,fontWeight:800,color:"#2D2B6B",display:"flex",alignItems:"center",gap:8,justifyContent:"center"}}>
+            <span style={{color:"#a78bfa"}}>ð²</span> Blind Drill <span style={{fontSize:11,fontWeight:400,color:"#8B8BA0",background:"#E8E4DC",padding:"2px 8px",borderRadius:99}}>#{roundCount}</span>
           </div>
-          <div style={{fontSize:12,color:"#a8a29e"}}>{status==="playing"&&!revealed?`${opening.color==="white"?"â":"â"} Identify the opening...`:revealed?opening.name:null}</div>
+          <div style={{fontSize:12,color:"#8B8BA0"}}>{status==="playing"&&!revealed?`${opening.color==="white"?"â":"â"} Identify the opening...`:revealed?opening.name:null}</div>
         </div>
-        <div style={{fontSize:14,color:"#a8a29e",fontFamily:"'Courier New',monospace"}}>{recentPerfect}/{roundResults.length} ð¯</div>
+        <div style={{fontSize:14,color:"#5B4DA0",fontWeight:700,fontFamily:"'SF Mono','Courier New',monospace"}}>{recentPerfect}/{roundResults.length} ð¯</div>
       </div>
       <div className="w-full flex items-center justify-between px-1">
         <button onClick={()=>setPlusMistakes(!plusMistakes)} style={{
           display:"flex",alignItems:"center",gap:8,padding:"6px 14px",borderRadius:8,fontSize:13,fontWeight:600,cursor:"pointer",transition:"all 0.2s",
-          background:plusMistakes?"rgba(220,38,38,0.15)":"rgba(255,255,255,0.04)",
-          border:`1px solid ${plusMistakes?"rgba(239,68,68,0.3)":"rgba(255,255,255,0.08)"}`,
-          color:plusMistakes?"#fca5a5":"#78716c",
+          background:plusMistakes?"#FEE2E2":"#FFFFFF",
+          border:`1.5px solid ${plusMistakes?"#EF4444":"#E2DFD6"}`,
+          color:plusMistakes?"#DC2626":"#8B8BA0",
+          boxShadow:"0 1px 3px rgba(45,43,107,0.06)",
         }}>{plusMistakes?"ð¥":"â"} Curveball Mode {plusMistakes?"ON":"OFF"}</button>
-        {!revealed&&status==="playing"&&<button onClick={()=>setRevealed(true)} style={{fontSize:12,padding:"4px 10px",borderRadius:6,background:"rgba(124,58,237,0.15)",color:"#c4b5fd",border:"1px solid rgba(124,58,237,0.2)",cursor:"pointer"}}>Peek</button>}
+        {!revealed&&status==="playing"&&<button onClick={()=>setRevealed(true)} style={{fontSize:12,padding:"4px 10px",borderRadius:6,background:"#F3F0FF",color:"#5B21B6",fontWeight:600,border:"1.5px solid #7C3AED40",cursor:"pointer"}}>Peek</button>}
       </div>
       {/* ââ Timer Bar ââ */}
-      <div className="w-full" style={{padding:"8px 14px",borderRadius:10,background:"rgba(0,0,0,0.25)",border:`1px solid ${overTarget?"rgba(239,68,68,0.2)":"rgba(255,255,255,0.06)"}`}}>
+      <div className="w-full" style={{padding:"8px 14px",borderRadius:10,background:"#FFFFFF",border:`1.5px solid ${overTarget?"#EF444440":"#E2DFD6"}`,boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
             <span style={{fontSize:11,color:"#78716c"}}>â±</span>
-            <span style={{fontSize:15,fontWeight:700,fontFamily:"'Courier New',monospace",color:overTarget?"#f87171":timerPct>75?"#fde047":"#67e8f9",letterSpacing:"-0.02em"}}>{timeSec}s</span>
+            <span style={{fontSize:15,fontWeight:700,fontFamily:"'Courier New',monospace",color:overTarget?"#DC2626":timerPct>75?"#A16207":"#0369A1",letterSpacing:"-0.02em"}}>{timeSec}s</span>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
-            <span style={{fontSize:11,color:"#78716c"}}>target</span>
-            <span style={{fontSize:13,fontWeight:600,fontFamily:"'Courier New',monospace",color:"#a8a29e"}}>{targetSec}s</span>
-            <span style={{fontSize:11,color:"#57534e"}}>({userMoveCount} moves Ã 3s)</span>
+            <span style={{fontSize:11,color:"#8B8BA0"}}>target</span>
+            <span style={{fontSize:13,fontWeight:600,fontFamily:"'SF Mono','Courier New',monospace",color:"#5B4DA0"}}>{targetSec}s</span>
+            <span style={{fontSize:11,color:"#8B8BA0"}}>({userMoveCount} moves Ã 3s)</span>
           </div>
         </div>
-        <div style={{width:"100%",height:6,borderRadius:3,background:"rgba(255,255,255,0.06)",overflow:"hidden",position:"relative"}}>
+        <div style={{width:"100%",height:6,borderRadius:3,background:"#E8E4DC",overflow:"hidden",position:"relative"}}>
           <div style={{
             height:"100%",borderRadius:3,transition:"width 0.1s linear",
             width:`${Math.min(timerPct,100)}%`,
-            background:overTarget?"linear-gradient(90deg,#ef4444,#dc2626)":timerPct>75?"linear-gradient(90deg,#eab308,#ca8a04)":"linear-gradient(90deg,#06b6d4,#0891b2)",
+            background:overTarget?"#EF4444":timerPct>75?"#EAB308":"#0EA5E9",
           }}/>
           {/* Target marker line */}
-          {timerPct<120&&<div style={{position:"absolute",top:-1,bottom:-1,left:"100%",width:2,background:"rgba(255,255,255,0.3)",borderRadius:1}}/>}
+          {timerPct<120&&<div style={{position:"absolute",top:-1,bottom:-1,left:"100%",width:2,background:"#2D2B6B40",borderRadius:1}}/>}
         </div>
       </div>
-      {status==="playing"&&!revealed&&!punishmentDone&&<div className="w-full" style={{padding:"10px 14px",borderRadius:10,background:"rgba(124,58,237,0.08)",border:"1px solid rgba(124,58,237,0.15)",color:"#c4b5fd",fontSize:13}}>ð® What opening is this?</div>}
-      {revealed&&status==="playing"&&!punishmentDone&&<div className="w-full" style={{padding:"10px 14px",borderRadius:10,background:"rgba(180,130,40,0.1)",border:"1px solid rgba(180,130,40,0.2)",color:"#fcd34d",fontSize:13}}>ð¡ {opening.name} â {opening.tip}</div>}
+      {status==="playing"&&!revealed&&!punishmentDone&&<div className="w-full" style={{padding:"10px 14px",borderRadius:10,background:"#F3F0FF",border:"1.5px solid #7C3AED30",color:"#5B21B6",fontSize:13,fontWeight:500}}>ð® What opening is this?</div>}
+      {revealed&&status==="playing"&&!punishmentDone&&<div className="w-full" style={{padding:"10px 14px",borderRadius:10,background:"#FFF7ED",border:"1.5px solid #FBBF2440",color:"#92400E",fontSize:13,fontWeight:500}}>ð¡ {opening.name} â {opening.tip}</div>}
       <div className="relative">
         <ChessBoard board={board} flipped={!isUserWhite} selected={selected} onSquareClick={handleSquareClick} lastMove={lastMove} wrongMove={wrongMove} correctSquare={correctSquare} correctFrom={correctFrom} correctSan={correctSan}/>
         {status==="complete"&&(
@@ -818,11 +819,11 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
             <div style={{fontSize:48}}>{mistakes===0?"ð¯":mistakes<=2?"ð":"ðª"}</div>
             <div style={{fontSize:18,fontWeight:800,color:"white"}}>{opening.name}</div>
             <div style={{fontSize:12,color:"#a8a29e"}}>{opening.eco} â¢ {opening.color}{punishmentDone&&<span style={{color:"#86efac",marginLeft:6}}>â¢ punished!</span>}</div>
-            <div style={{fontSize:14,color:"#d6d3d1"}}>{mistakes===0?"Perfect!":`${mistakes} mistake${mistakes!==1?"s":""}`}</div>
+            <div style={{fontSize:14,color:"#E8E4F8"}}>{mistakes===0?"Perfect!":`${mistakes} mistake${mistakes!==1?"s":""}`}</div>
             {finalTime!==null&&(
               <div style={{display:"flex",alignItems:"center",gap:6,marginTop:2}}>
-                <span style={{fontSize:13,fontWeight:700,fontFamily:"'Courier New',monospace",color:finalTime<=targetMs?"#4ade80":"#f87171"}}>{(finalTime/1000).toFixed(1)}s</span>
-                <span style={{fontSize:11,color:"#78716c"}}>/ {(targetMs/1000).toFixed(0)}s target</span>
+                <span style={{fontSize:13,fontWeight:700,fontFamily:"'Courier New',monospace",color:finalTime<=targetMs?"#4ADE80":"#FCA5A5"}}>{(finalTime/1000).toFixed(1)}s</span>
+                <span style={{fontSize:11,color:"#C4B5FD"}}>/ {(targetMs/1000).toFixed(0)}s target</span>
                 {finalTime<=targetMs&&<span style={{fontSize:12}}>â¡</span>}
               </div>
             )}
@@ -834,21 +835,21 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
         )}
       </div>
       <div className="w-full flex items-center justify-between gap-3">
-        <div style={{flex:1,fontSize:13,color:"#d6d3d1",fontFamily:"'Courier New',monospace",background:"rgba(0,0,0,0.2)",borderRadius:8,padding:"8px 12px",minHeight:36,overflowX:"auto",whiteSpace:"nowrap"}}>
-          {fmtH.length>0?fmtH.join("  "):<span style={{color:"#78716c",fontStyle:"italic"}}>{isUserTurn(0)?"Your move...":"Watching..."}</span>}
+        <div style={{flex:1,fontSize:13,color:"#2D2B6B",fontFamily:"'SF Mono','Courier New',monospace",background:"#FFFFFF",borderRadius:10,padding:"8px 12px",boxShadow:"0 1px 3px rgba(45,43,107,0.06)",minHeight:36,overflowX:"auto",whiteSpace:"nowrap"}}>
+          {fmtH.length>0?fmtH.join("  "):<span style={{color:"#8B8BA0",fontStyle:"italic"}}>{isUserTurn(0)?"Your move...":"Watching..."}</span>}
         </div>
         {status==="playing"&&(isUserTurn(moveIndex)||(mistakeTriggered&&!punishmentDone))&&(
-          <button onClick={hint} style={{padding:"6px 14px",borderRadius:8,background:"rgba(255,255,255,0.08)",color:"#a8a29e",fontSize:13,border:"1px solid rgba(255,255,255,0.06)",cursor:"pointer",flexShrink:0}}>{showHint?`Play ${curExp?.san}`:"Hint ð¡"}</button>
+          <button onClick={hint} style={{padding:"6px 14px",borderRadius:8,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",flexShrink:0,boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>{showHint?`Play ${curExp?.san}`:"Hint ð¡"}</button>
         )}
       </div>
       {roundResults.length>0&&(
         <div className="w-full flex items-center gap-1.5 flex-wrap">
-          <span style={{fontSize:11,color:"#78716c",marginRight:4}}>History:</span>
+          <span style={{fontSize:11,color:"#8B8BA0",fontWeight:600,marginRight:4}}>History:</span>
           {roundResults.map((r,i)=>(
             <div key={i} style={{fontSize:11,padding:"2px 8px",borderRadius:99,
-              background:r.perfect?"rgba(34,197,94,0.15)":"rgba(239,68,68,0.1)",
-              border:`1px solid ${r.perfect?"rgba(34,197,94,0.25)":"rgba(239,68,68,0.15)"}`,
-              color:r.perfect?"#86efac":"#fca5a5",
+              background:r.perfect?"#DCFCE7":"#FEE2E2",fontWeight:600,
+              border:`1.5px solid ${r.perfect?"#22C55E40":"#EF444440"}`,
+              color:r.perfect?"#15803D":"#DC2626",
             }} title={`${r.name}${r.time?` â ${(r.time/1000).toFixed(1)}s`:""}${r.punished?" (punished)":""}`}>{r.fast&&r.perfect?"â¡":r.perfect?"â":"â"} {r.name.split(":")[0].split("vs ").pop().substring(0,8)}{r.time?` ${(r.time/1000).toFixed(0)}s`:""}</div>
           ))}
         </div>
@@ -880,24 +881,24 @@ const ChessComImport = ({ onBack }) => {
         <button onClick={onBack} style={{padding:"6px 14px",borderRadius:8,background:"rgba(255,255,255,0.08)",color:"#d6d3d1",fontSize:13,fontWeight:600,border:"1px solid rgba(255,255,255,0.06)",cursor:"pointer"}}>â Back</button>
         <div style={{fontSize:18,fontWeight:800,color:"#fafaf9"}}>ð¥ Chess.com Import</div><div style={{width:60}}/>
       </div>
-      <div style={{padding:16,borderRadius:12,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)"}}>
-        <div style={{fontSize:13,color:"#a8a29e",marginBottom:12}}>Fetch recent blitz &amp; rapid games and see which openings you face vs. the trainer.</div>
+      <div style={{padding:16,borderRadius:12,background:"#FFFFFF",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>
+        <div style={{fontSize:13,color:"#6B6B80",marginBottom:12}}>Fetch recent blitz &amp; rapid games and see which openings you face vs. the trainer.</div>
         <div className="flex gap-2">
           <input value={username} onChange={e=>setUsername(e.target.value)} placeholder="Chess.com username"
-            style={{flex:1,padding:"8px 12px",borderRadius:8,background:"rgba(0,0,0,0.3)",border:"1px solid rgba(255,255,255,0.08)",color:"#e7e5e4",fontSize:13,outline:"none"}}/>
-          <button onClick={fetchGames} disabled={loading} style={{padding:"8px 16px",borderRadius:8,background:loading?"#555":"linear-gradient(135deg,#d97706,#b45309)",color:"white",fontWeight:600,fontSize:13,border:"none",cursor:loading?"wait":"pointer",flexShrink:0}}>{loading?"Loading...":"Fetch"}</button>
+            style={{flex:1,padding:"8px 12px",borderRadius:8,background:"#F5F0E8",border:"1.5px solid #E2DFD6",color:"#1A1A2E",fontSize:13,outline:"none"}}/>
+          <button onClick={fetchGames} disabled={loading} style={{padding:"8px 16px",borderRadius:8,background:loading?"#8B8BA0":"#E8722A",color:"white",fontWeight:700,fontSize:13,border:"none",cursor:loading?"wait":"pointer",flexShrink:0}}>{loading?"Loading...":"Fetch"}</button>
         </div>
-        {error&&<div style={{marginTop:8,color:"#f87171",fontSize:13}}>{error}</div>}
+        {error&&<div style={{marginTop:8,color:"#DC2626",fontSize:13,fontWeight:500}}>{error}</div>}
       </div>
       {results&&(
         <div className="flex flex-col gap-2">
-          <div style={{fontSize:13,color:"#a8a29e"}}><strong style={{color:"#fafaf9"}}>{results.total}</strong> games analyzed:</div>
+          <div style={{fontSize:13,color:"#6B6B80"}}><strong style={{color:"#2D2B6B"}}>{results.total}</strong> games analyzed:</div>
           {results.openings.map(([name,data],i)=>{
             const ok=name.includes("â"),warn=name.includes("â ï¸");
             const wr=data.count>0?Math.round(data.wins/data.count*100):0;
-            return(<div key={i} style={{padding:"8px 12px",borderRadius:8,fontSize:13,background:ok?"rgba(34,197,94,0.08)":warn?"rgba(234,179,8,0.08)":"rgba(255,255,255,0.03)",border:`1px solid ${ok?"rgba(34,197,94,0.15)":warn?"rgba(234,179,8,0.15)":"rgba(255,255,255,0.04)"}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-              <div className="flex items-center gap-2"><span style={{fontSize:11,padding:"2px 6px",borderRadius:4,background:data.color==="white"?"#e7e5e4":"#44403c",color:data.color==="white"?"#1c1917":"#e7e5e4"}}>{data.color==="white"?"â":"â"}</span><span style={{color:ok?"#86efac":warn?"#fde047":"#d6d3d1"}}>{name.replace(/ â| â ï¸/g,"")}</span></div>
-              <div className="flex items-center gap-3" style={{fontSize:11,color:"#78716c"}}><span>{data.count}g</span><span style={{color:wr>=50?"#4ade80":"#f87171"}}>{wr}%</span></div>
+            return(<div key={i} style={{padding:"8px 12px",borderRadius:8,fontSize:13,background:ok?"#DCFCE7":warn?"#FEF9C3":"#FFFFFF",border:`1.5px solid ${ok?"#22C55E30":warn?"#EAB30830":"#E2DFD6"}`,boxShadow:"0 1px 2px rgba(45,43,107,0.04)",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <div className="flex items-center gap-2"><span style={{fontSize:11,padding:"2px 6px",borderRadius:4,background:data.color==="white"?"#F5F0E8":"#2D2B6B",color:data.color==="white"?"#1A1A2E":"#F5F0E8"}}>{data.color==="white"?"â":"â"}</span><span style={{color:ok?"#15803D":warn?"#A16207":"#1A1A2E",fontWeight:500}}>{name.replace(/ â| â ï¸/g,"")}</span></div>
+              <div className="flex items-center gap-3" style={{fontSize:11,color:"#8B8BA0",fontWeight:600}}><span>{data.count}g</span><span style={{color:wr>=50?"#15803D":"#DC2626"}}>{wr}%</span></div>
             </div>);
           })}
         </div>
@@ -917,78 +918,80 @@ function App() {
   const avgBox=(Object.values(sr).reduce((s,v)=>s+(v.box||1),0)/OPENINGS.length).toFixed(1);
   const solidCount=Object.values(sr).filter(v=>(v.box||1)>=4).length;
   const filtered=filter==="all"?OPENINGS:OPENINGS.filter(o=>o.color===filter);
-  if(view==="import")return(<div style={{minHeight:"100vh",padding:16,background:"linear-gradient(145deg, #0f0d0a 0%, #1a1510 50%, #0f0d0a 100%)"}}><ChessComImport onBack={handleBack}/></div>);
-  if(view==="blind")return(<div style={{minHeight:"100vh",padding:16,display:"flex",justifyContent:"center",background:"linear-gradient(145deg, #0f0d0a 0%, #16101e 50%, #0f0d0a 100%)"}}><BlindDrillView sr={sr} setSR={setSR} session={session} onBack={handleBack}/></div>);
-  if(view==="drill"&&currentOpening)return(<div style={{minHeight:"100vh",padding:16,display:"flex",justifyContent:"center",background:"linear-gradient(145deg, #0f0d0a 0%, #1a1510 50%, #0f0d0a 100%)"}}><DrillView opening={currentOpening} sr={sr} setSR={setSR} session={session} onBack={handleBack}/></div>);
+  if(view==="import")return(<div style={{minHeight:"100vh",padding:16,background:"#F5F0E8"}}><ChessComImport onBack={handleBack}/></div>);
+  if(view==="blind")return(<div style={{minHeight:"100vh",padding:16,display:"flex",justifyContent:"center",background:"#F5F0E8"}}><BlindDrillView sr={sr} setSR={setSR} session={session} onBack={handleBack}/></div>);
+  if(view==="drill"&&currentOpening)return(<div style={{minHeight:"100vh",padding:16,display:"flex",justifyContent:"center",background:"#F5F0E8"}}><DrillView opening={currentOpening} sr={sr} setSR={setSR} session={session} onBack={handleBack}/></div>);
   const Row=({o})=>{const s=sr[o.id]||{box:1,streak:0};const bc=boxColors[s.box];return(
     <button onClick={()=>startDrill(o)} style={{
-      width:"100%",textAlign:"left",padding:"10px 14px",borderRadius:10,border:`1px solid ${bc.border}30`,
-      background:`${bc.bg}30`,cursor:"pointer",transition:"all 0.15s",display:"block",
+      width:"100%",textAlign:"left",padding:"10px 14px",borderRadius:10,border:`1.5px solid ${bc.border}40`,
+      background:"#FFFFFF",cursor:"pointer",transition:"all 0.15s",display:"block",
+      boxShadow:"0 1px 3px rgba(45,43,107,0.06)",
     }}
-    onMouseOver={e=>{e.currentTarget.style.transform="translateX(2px)";e.currentTarget.style.borderColor=bc.border+"60";}}
-    onMouseOut={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.borderColor=bc.border+"30";}}>
+    onMouseOver={e=>{e.currentTarget.style.transform="translateX(3px)";e.currentTarget.style.boxShadow="0 4px 12px rgba(45,43,107,0.1)";}}
+    onMouseOut={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="0 1px 3px rgba(45,43,107,0.06)";}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <div><span style={{fontWeight:600,color:"#fafaf9",fontSize:14}}>{o.name}</span><span style={{color:"#78716c",fontSize:12,marginLeft:8}}>{o.eco}</span>{o.branchAt!==undefined&&<span style={{color:"#a78bfa",fontSize:12,marginLeft:4}}>ð</span>}</div>
+        <div><span style={{fontWeight:700,color:"#1A1A2E",fontSize:14}}>{o.name}</span><span style={{color:"#8B8BA0",fontSize:12,marginLeft:8}}>{o.eco}</span>{o.branchAt!==undefined&&<span style={{color:"#7C3AED",fontSize:12,marginLeft:4}}>ð</span>}</div>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
           {s.streak>=3&&<span style={{fontSize:12}}>ð¥{s.streak}</span>}
           <div style={{width:8,height:8,borderRadius:4,background:bc.dot}}/>
           <span style={{fontSize:12,fontWeight:600,color:bc.text}}>{boxLabels[s.box]}</span>
         </div>
       </div>
-      <div style={{fontSize:11,color:"#78716c",marginTop:2}}>{o.category} â¢ {o.branchAt?`${o.moves.length}+branch`:o.moves.length} moves{o.mistakes?.length>0?" â¢ ð¥":""}</div>
+      <div style={{fontSize:11,color:"#8B8BA0",marginTop:3}}>{o.category} â¢ {o.branchAt?`${o.moves.length}+branch`:o.moves.length} moves{o.mistakes?.length>0?" â¢ ð¥":""}</div>
     </button>
   );};
   return(
-    <div style={{minHeight:"100vh",padding:16,background:"linear-gradient(145deg, #0f0d0a 0%, #1a1510 50%, #0f0d0a 100%)"}}>
+    <div style={{minHeight:"100vh",padding:16,background:"#F5F0E8"}}>
       <style>{`@keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }`}</style>
       <div className="max-w-xl mx-auto" style={{animation:"fadeIn 0.4s ease"}}>
         <div style={{textAlign:"center",marginBottom:28}}>
-          <h1 style={{fontSize:28,fontWeight:800,color:"#fafaf9",letterSpacing:"-0.03em",fontFamily:"Georgia,serif",margin:0}}>â Opening Trainer</h1>
-          <p style={{color:"#78716c",fontSize:13,margin:"6px 0 0"}}>Deliberate practice Â· Spaced repetition Â· 5âmin blitz ready</p>
+          <h1 style={{fontSize:30,fontWeight:900,color:"#2D2B6B",letterSpacing:"-0.03em",fontFamily:"-apple-system,BlinkMacSystemFont,'SF Pro Rounded',sans-serif",margin:0}}>â Opening Trainer</h1>
+          <p style={{color:"#8B8BA0",fontSize:13,margin:"6px 0 0",fontWeight:500}}>Deliberate practice Â· Spaced repetition Â· 5âmin blitz ready</p>
         </div>
         {/* Stats */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:8,marginBottom:20}}>
           {[{l:"Drilled",v:totalC+totalI,i:"ð"},{l:"Accuracy",v:totalC+totalI>0?Math.round(totalC/(totalC+totalI)*100)+"%":"â",i:"ð¯"},{l:"Avg Box",v:avgBox,i:"ð"},{l:"Solid+",v:`${solidCount}/${OPENINGS.length}`,i:"â­"}].map(({l,v,i})=>(
-            <div key={l} style={{background:"rgba(255,255,255,0.03)",borderRadius:10,padding:"10px 8px",textAlign:"center",border:"1px solid rgba(255,255,255,0.04)"}}>
-              <div style={{fontSize:18,fontWeight:700,color:"#fafaf9"}}>{v}</div>
-              <div style={{fontSize:11,color:"#78716c"}}>{i} {l}</div>
+            <div key={l} style={{background:"#FFFFFF",borderRadius:14,padding:"12px 8px",textAlign:"center",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>
+              <div style={{fontSize:20,fontWeight:800,color:"#2D2B6B"}}>{v}</div>
+              <div style={{fontSize:11,color:"#8B8BA0",fontWeight:500}}>{i} {l}</div>
             </div>
           ))}
         </div>
         {/* Action Buttons */}
-        <button onClick={smartDrill} style={{width:"100%",marginBottom:10,padding:"14px 0",borderRadius:12,fontWeight:700,fontSize:17,background:"linear-gradient(135deg,#d97706 0%,#92400e 100%)",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(217,119,6,0.25)",letterSpacing:"-0.01em"}}>â¡ Smart Drill</button>
-        <button onClick={()=>setView("blind")} style={{width:"100%",marginBottom:10,padding:"14px 0",borderRadius:12,fontWeight:700,fontSize:17,background:"linear-gradient(135deg,#7c3aed 0%,#4c1d95 100%)",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(124,58,237,0.25)",letterSpacing:"-0.01em"}}>ð² Blind Drill â Rapid Fire</button>
-        <button onClick={()=>setView("import")} style={{width:"100%",marginBottom:20,padding:"10px 0",borderRadius:12,fontWeight:500,fontSize:13,background:"rgba(255,255,255,0.04)",color:"#a8a29e",border:"1px solid rgba(255,255,255,0.06)",cursor:"pointer"}}>ð¥ Import from Chess.com</button>
+        <button onClick={smartDrill} style={{width:"100%",marginBottom:10,padding:"14px 0",borderRadius:12,fontWeight:700,fontSize:17,background:"#E8722A",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(232,114,42,0.3)",letterSpacing:"-0.01em"}}>â¡ Smart Drill</button>
+        <button onClick={()=>setView("blind")} style={{width:"100%",marginBottom:10,padding:"14px 0",borderRadius:12,fontWeight:700,fontSize:17,background:"#5B4DA0",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(91,77,160,0.3)",letterSpacing:"-0.01em"}}>ð² Blind Drill â Rapid Fire</button>
+        <button onClick={()=>setView("import")} style={{width:"100%",marginBottom:20,padding:"10px 0",borderRadius:12,fontWeight:500,fontSize:13,background:"#FFFFFF",color:"#5B4DA0",border:"1.5px solid #E2DFD6",boxShadow:"0 1px 3px rgba(45,43,107,0.04)",cursor:"pointer"}}>ð¥ Import from Chess.com</button>
         {/* Filter */}
         <div style={{display:"flex",gap:6,marginBottom:16}}>
           {["all","white","black"].map(f=>(
             <button key={f} onClick={()=>setFilter(f)} style={{
               padding:"6px 14px",borderRadius:8,fontSize:13,fontWeight:500,cursor:"pointer",transition:"all 0.15s",
-              background:filter===f?"rgba(217,119,6,0.2)":"rgba(255,255,255,0.03)",
-              color:filter===f?"#fcd34d":"#78716c",
-              border:`1px solid ${filter===f?"rgba(217,119,6,0.3)":"transparent"}`,
+              background:filter===f?"#2D2B6B":"#FFFFFF",
+              color:filter===f?"#FFFFFF":"#8B8BA0",
+              border:`1.5px solid ${filter===f?"#2D2B6B":"#E2DFD6"}`,
+              boxShadow:filter===f?"0 2px 8px rgba(45,43,107,0.2)":"none",
             }}>{f==="all"?"All Lines":f==="white"?"â White":"â Black"}</button>
           ))}
         </div>
         {/* Opening Lists */}
         {filtered.filter(o=>o.color==="white").length>0&&(filter==="all"||filter==="white")&&(
           <div style={{marginBottom:16}}>
-            {filter==="all"&&<div style={{fontSize:11,fontWeight:700,color:"#57534e",textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:8,paddingLeft:4}}>White Repertoire</div>}
+            {filter==="all"&&<div style={{fontSize:11,fontWeight:800,color:"#5B4DA0",textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:8,paddingLeft:4}}>White Repertoire</div>}
             <div style={{display:"flex",flexDirection:"column",gap:6}}>{filtered.filter(o=>o.color==="white").map(o=><Row key={o.id} o={o}/>)}</div>
           </div>
         )}
         {filtered.filter(o=>o.color==="black").length>0&&(filter==="all"||filter==="black")&&(
           <div style={{marginBottom:16}}>
-            {filter==="all"&&<div style={{fontSize:11,fontWeight:700,color:"#57534e",textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:8,paddingLeft:4}}>Black Repertoire</div>}
+            {filter==="all"&&<div style={{fontSize:11,fontWeight:800,color:"#5B4DA0",textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:8,paddingLeft:4}}>Black Repertoire</div>}
             <div style={{display:"flex",flexDirection:"column",gap:6}}>{filtered.filter(o=>o.color==="black").map(o=><Row key={o.id} o={o}/>)}</div>
           </div>
         )}
         {/* How It Works */}
-        <div style={{marginTop:24,padding:16,borderRadius:12,background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.04)",fontSize:13,color:"#78716c"}}>
-          <div style={{fontWeight:700,color:"#a8a29e",marginBottom:8}}>How This Works</div>
-          <p style={{margin:"0 0 8px"}}><span style={{color:"#d6d3d1"}}>Leitner spaced repetition</span> â 5 mastery boxes. Perfect runs promote, mistakes demote.</p>
+        <div style={{marginTop:24,padding:16,borderRadius:12,background:"#FFFFFF",boxShadow:"0 1px 3px rgba(45,43,107,0.06)",fontSize:13,color:"#6B6B80"}}>
+          <div style={{fontWeight:800,color:"#2D2B6B",marginBottom:8}}>How This Works</div>
+          <p style={{margin:"0 0 8px"}}><span style={{color:"#1A1A2E",fontWeight:600}}>Leitner spaced repetition</span> â 5 mastery boxes. Perfect runs promote, mistakes demote.</p>
           <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:8}}>
-            {[1,2,3,4,5].map(b=><span key={b} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"2px 8px",borderRadius:4,fontSize:11,background:boxColors[b].bg+"50",color:boxColors[b].text,border:`1px solid ${boxColors[b].border}30`}}><span style={{width:6,height:6,borderRadius:3,background:boxColors[b].dot}}/>{boxLabels[b]}</span>)}
+            {[1,2,3,4,5].map(b=><span key={b} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"2px 8px",borderRadius:4,fontSize:11,background:boxColors[b].bg,color:boxColors[b].text,border:`1.5px solid ${boxColors[b].border}50`}}><span style={{width:6,height:6,borderRadius:3,background:boxColors[b].dot}}/>{boxLabels[b]}</span>)}
           </div>
           <p style={{margin:"0 0 4px"}}><span style={{color:"#d6d3d1"}}>ð² Blind</span> â random color, hidden name. <span style={{color:"#d6d3d1"}}>ð¥ Curveball Mode</span> â opponent blunders, you punish.</p>
           <p style={{margin:0}}><span style={{color:"#d6d3d1"}}>ð Branching</span> â Scotch Nxc6: choose Schmidt (e5) or Mieses (Bd3) at the branch.</p>
