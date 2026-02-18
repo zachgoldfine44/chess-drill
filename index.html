@@ -679,6 +679,17 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
     if(clockRef.current)clearInterval(clockRef.current);
     clockRef.current=setInterval(()=>{if(startTimeRef.current)setElapsed(Date.now()-startTimeRef.current);},100);
   },[pickRandom]);
+  const repeatRound=useCallback(()=>{
+    if(!opening)return;
+    let branch=activeBranch;
+    if(opening.branchAt!==undefined&&branch===null)branch=Math.floor(Math.random()*opening.branches.length);
+    setActiveBranch(branch);setBoard(INIT_BOARD());setMoveIndex(0);setSelected(null);setLastMove(null);
+    setWrongMove(null);setCorrectSquare(null);setStatus("playing");setMoveHistory([]);setMistakes(0);setShowHint(false);
+    setRevealed(false);setMistakeTriggered(null);setPunishmentDone(false);setRoundCount(prev=>prev+1);
+    setElapsed(0);setFinalTime(null);startTimeRef.current=Date.now();
+    if(clockRef.current)clearInterval(clockRef.current);
+    clockRef.current=setInterval(()=>{if(startTimeRef.current)setElapsed(Date.now()-startTimeRef.current);},100);
+  },[opening,activeBranch]);
   useEffect(()=>{startRound();return()=>{if(clockRef.current)clearInterval(clockRef.current);};},[]);
   const isUserWhite=opening?.color==="white";
   const activeMoves=opening?getActiveMoves(opening,activeBranch):[];
@@ -818,7 +829,10 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
                 {finalTime<=targetMs&&<span style={{fontSize:12}}>⚡</span>}
               </div>
             )}
-            <button onClick={startRound} style={{marginTop:12,padding:"10px 28px",borderRadius:12,fontWeight:700,fontSize:14,background:"linear-gradient(135deg,#7c3aed,#5b21b6)",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(124,58,237,0.3)"}}>⚡ Next — Rapid Fire</button>
+            <div style={{display:"flex",gap:10,marginTop:12,flexWrap:"wrap",justifyContent:"center"}}>
+              {(mistakes>0||finalTime>targetMs)&&<button onClick={repeatRound} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"linear-gradient(135deg,#d97706,#b45309)",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(217,119,6,0.3)"}}>🔁 Repeat Drill</button>}
+              <button onClick={startRound} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"linear-gradient(135deg,#7c3aed,#5b21b6)",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(124,58,237,0.3)"}}>⚡ Next — Rapid Fire</button>
+            </div>
           </div>
         )}
       </div>
