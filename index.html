@@ -528,7 +528,7 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
                     zIndex: isSel ? 10 : 2,
                     filter: piece === piece.toUpperCase()
                       ? "drop-shadow(1px 2px 3px rgba(45,43,107,0.35))"
-                      : "drop-shadow(1px 2px 3px rgba(0,0,0,0.5)),"
+                      : "drop-shadow(1px 2px 3px rgba(0,0,0,0.5))",
                     userSelect:"none",
                     pointerEvents:"none",
                   }}>{P[piece]}</div>
