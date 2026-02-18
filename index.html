@@ -394,7 +394,7 @@ const getActiveMoves = (opening, branch) => {
   if (branch !== null && opening.branches?.[branch]) return [...opening.moves, ...opening.branches[branch].continuation];
   return opening.moves;
 };
-const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMove, correctSquare, moveAnim }) => {
+const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMove, correctSquare, correctFrom, correctSan, moveAnim }) => {
   const containerRef = useRef(null);
   const [SZ, setSZ] = useState(60);
   useEffect(() => {
@@ -440,6 +440,7 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
             const isLastTo = lastMove && lastMove.to[0]===r && lastMove.to[1]===c;
             const isWrong = wrongMove && wrongMove[0]===r && wrongMove[1]===c;
             const isCorrect = correctSquare && correctSquare[0]===r && correctSquare[1]===c;
+            const isCorrectFrom = correctFrom && correctFrom[0]===r && correctFrom[1]===c;
             // Colors
             const lightSq = "#F0D9B5"; const darkSq = "#B58863";
             const lightHi = "#F7EC7D"; const darkHi = "#DAC34B";
@@ -493,7 +494,25 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
                       background:"#16a34a", color:"white", fontSize:10, fontWeight:700,
                       padding:"1px 6px", borderRadius:4, whiteSpace:"nowrap",
                       boxShadow:"0 2px 8px rgba(0,0,0,0.4)",
-                    }}>Here ↑</div>
+                    }}>{correctSan||"Here ↑"}</div>
+                  </div>
+                )}
+                {/* Correct FROM square indicator */}
+                {isCorrectFrom && (
+                  <div style={{
+                    position:"absolute", inset:4,
+                    border:"3px solid #3b82f6",
+                    borderRadius:6,
+                    boxShadow:"0 0 12px rgba(59,130,246,0.5), inset 0 0 8px rgba(59,130,246,0.2)",
+                    animation:"pulseCorrect 0.8s ease-in-out infinite",
+                    pointerEvents:"none", zIndex:5,
+                  }}>
+                    <div style={{
+                      position:"absolute", top:-16, left:"50%", transform:"translateX(-50%)",
+                      background:"#2563eb", color:"white", fontSize:10, fontWeight:700,
+                      padding:"1px 6px", borderRadius:4, whiteSpace:"nowrap",
+                      boxShadow:"0 2px 8px rgba(0,0,0,0.4)",
+                    }}>This piece</div>
                   </div>
                 )}
                 {/* Selection indicator — ring */}
@@ -569,18 +588,18 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
 };
 const DrillView = ({ opening, sr, setSR, session, onBack }) => {
   const [board,setBoard]=useState(INIT_BOARD());const [moveIndex,setMoveIndex]=useState(0);const [selected,setSelected]=useState(null);
-  const [lastMove,setLastMove]=useState(null);const [wrongMove,setWrongMove]=useState(null);const [correctSquare,setCorrectSquare]=useState(null);
+  const [lastMove,setLastMove]=useState(null);const [wrongMove,setWrongMove]=useState(null);const [correctSquare,setCorrectSquare]=useState(null);const [correctFrom,setCorrectFrom]=useState(null);const [correctSan,setCorrectSan]=useState(null);
   const [status,setStatus]=useState("playing");const [moveHistory,setMoveHistory]=useState([]);const [mistakes,setMistakes]=useState(0);
   const [showHint,setShowHint]=useState(false);const [activeBranch,setActiveBranch]=useState(null);const [branchName,setBranchName]=useState(null);
   const timerRef=useRef(null);const isUserWhite=opening.color==="white";
-  const activeMoves=getActiveMoves(opening,activeBranch);
+  const activeMoves=useMemo(()=>getActiveMoves(opening,activeBranch),[opening,activeBranch]);
   const isUserTurn=useCallback(idx=>isUserWhite?idx%2===0:idx%2===1,[isUserWhite]);
-  useEffect(()=>{setBoard(INIT_BOARD());setMoveIndex(0);setSelected(null);setLastMove(null);setWrongMove(null);setCorrectSquare(null);setStatus("playing");setMoveHistory([]);setMistakes(0);setShowHint(false);setActiveBranch(null);setBranchName(null);},[opening.id]);
+  useEffect(()=>{setBoard(INIT_BOARD());setMoveIndex(0);setSelected(null);setLastMove(null);setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);setStatus("playing");setMoveHistory([]);setMistakes(0);setShowHint(false);setActiveBranch(null);setBranchName(null);},[opening.id]);
   useEffect(()=>{if(status!=="playing"||moveIndex>=activeMoves.length)return;if(!isUserTurn(moveIndex)){timerRef.current=setTimeout(()=>{const move=activeMoves[moveIndex];setBoard(prev=>applyMove(prev,move.from,move.to,move.extra));setLastMove({from:sq(move.from),to:sq(move.to)});setMoveHistory(prev=>[...prev,move.san]);setMoveIndex(prev=>prev+1);setSelected(null);setShowHint(false);},500);return()=>clearTimeout(timerRef.current);}},[moveIndex,status,activeMoves,isUserTurn]);
   useEffect(()=>{if(moveIndex>=activeMoves.length&&status==="playing"&&(activeBranch!==null||!opening.branchAt)){setStatus("complete");setSR(prev=>{const s={...prev[opening.id]};if(mistakes===0){s.correct++;s.streak++;s.box=Math.min(5,s.box+1);}else{s.incorrect++;s.streak=0;s.box=Math.max(1,s.box-1);}s.lastDrilled=session;return{...prev,[opening.id]:s};});}},[moveIndex,activeMoves,status,mistakes,session,setSR,opening,activeBranch]);
   const handleSquareClick=(r,c)=>{
     if(status!=="playing"||!isUserTurn(moveIndex))return;
-    if(wrongMove){setWrongMove(null);setCorrectSquare(null);}
+    if(wrongMove){setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);}
     if(opening.branchAt!==undefined&&moveIndex===opening.branchAt&&activeBranch===null){
       if(!selected){if(board[r][c]){const p=board[r][c];if(isUserWhite?p===p.toUpperCase():p===p.toLowerCase())setSelected([r,c]);}return;}
       if(selected[0]===r&&selected[1]===c){setSelected(null);return;}
@@ -605,10 +624,10 @@ const DrillView = ({ opening, sr, setSR, session, onBack }) => {
       if(selected[0]===efr&&selected[1]===efc&&r===etr&&c===etc){
         setBoard(prev=>applyMove(prev,em.from,em.to,em.extra));setLastMove({from:[efr,efc],to:[etr,etc]});
         setMoveHistory(prev=>[...prev,em.san]);setMoveIndex(prev=>prev+1);setSelected(null);setShowHint(false);
-      }else{setWrongMove([r,c]);setCorrectSquare([etr,etc]);setMistakes(prev=>prev+1);setSelected(null);setTimeout(()=>{setWrongMove(null);setCorrectSquare(null);},2000);}
+      }else{setWrongMove([r,c]);setCorrectSquare([etr,etc]);setCorrectFrom([efr,efc]);setCorrectSan(em.san);setMistakes(prev=>prev+1);setSelected(null);setTimeout(()=>{setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);},2000);}
     }
   };
-  const handleRestart=()=>{setBoard(INIT_BOARD());setMoveIndex(0);setSelected(null);setLastMove(null);setWrongMove(null);setCorrectSquare(null);setStatus("playing");setMoveHistory([]);setMistakes(0);setShowHint(false);setActiveBranch(null);setBranchName(null);};
+  const handleRestart=()=>{setBoard(INIT_BOARD());setMoveIndex(0);setSelected(null);setLastMove(null);setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);setStatus("playing");setMoveHistory([]);setMistakes(0);setShowHint(false);setActiveBranch(null);setBranchName(null);};
   const hint=()=>{if(moveIndex<activeMoves.length&&isUserTurn(moveIndex)){setShowHint(true);setMistakes(prev=>prev+1);}};
   const currentExpected=moveIndex<activeMoves.length&&isUserTurn(moveIndex)?activeMoves[moveIndex]:null;
   const srData=sr[opening.id]||{box:1};const bc=boxColors[srData.box];const currentTip=branchName?opening.branches[activeBranch]?.tip||opening.tip:opening.tip;
@@ -628,7 +647,7 @@ const DrillView = ({ opening, sr, setSR, session, onBack }) => {
         <div className="w-full" style={{padding:"10px 14px",borderRadius:10,background:"rgba(124,58,237,0.12)",border:"1px solid rgba(124,58,237,0.25)",color:"#c4b5fd",fontSize:13}}>🔀 Branch! Choose: {opening.branches.map(b=>b.name).join(" or ")}</div>
       )}
       <div className="relative">
-        <ChessBoard board={board} flipped={!isUserWhite} selected={selected} onSquareClick={handleSquareClick} lastMove={lastMove} wrongMove={wrongMove} correctSquare={correctSquare}/>
+        <ChessBoard board={board} flipped={!isUserWhite} selected={selected} onSquareClick={handleSquareClick} lastMove={lastMove} wrongMove={wrongMove} correctSquare={correctSquare} correctFrom={correctFrom} correctSan={correctSan}/>
         {status==="complete"&&(
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3" style={{background:"rgba(12,10,9,0.88)",borderRadius:14,backdropFilter:"blur(8px)",animation:"fadeIn 0.3s ease",zIndex:30}}>
             <div style={{fontSize:48}}>{mistakes===0?"🎯":mistakes<=2?"👍":"💪"}</div>
@@ -657,7 +676,7 @@ const DrillView = ({ opening, sr, setSR, session, onBack }) => {
 const BlindDrillView = ({ sr, setSR, session, onBack }) => {
   const [opening,setOpening]=useState(null);const [board,setBoard]=useState(INIT_BOARD());const [moveIndex,setMoveIndex]=useState(0);
   const [selected,setSelected]=useState(null);const [lastMove,setLastMove]=useState(null);const [wrongMove,setWrongMove]=useState(null);
-  const [correctSquare,setCorrectSquare]=useState(null);const [status,setStatus]=useState("playing");const [moveHistory,setMoveHistory]=useState([]);
+  const [correctSquare,setCorrectSquare]=useState(null);const [correctFrom,setCorrectFrom]=useState(null);const [correctSan,setCorrectSan]=useState(null);const [status,setStatus]=useState("playing");const [moveHistory,setMoveHistory]=useState([]);
   const [mistakes,setMistakes]=useState(0);const [showHint,setShowHint]=useState(false);const [revealed,setRevealed]=useState(false);
   const [roundCount,setRoundCount]=useState(0);const [roundResults,setRoundResults]=useState([]);
   const [plusMistakes,setPlusMistakes]=useState(false);const [activeBranch,setActiveBranch]=useState(null);
@@ -673,7 +692,7 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
     const o=pickRandom();let branch=null;
     if(o.branchAt!==undefined)branch=Math.floor(Math.random()*o.branches.length);
     setOpening(o);setActiveBranch(branch);setBoard(INIT_BOARD());setMoveIndex(0);setSelected(null);setLastMove(null);
-    setWrongMove(null);setCorrectSquare(null);setStatus("playing");setMoveHistory([]);setMistakes(0);setShowHint(false);
+    setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);setStatus("playing");setMoveHistory([]);setMistakes(0);setShowHint(false);
     setRevealed(false);setMistakeTriggered(null);setPunishmentDone(false);setRoundCount(prev=>prev+1);
     setElapsed(0);setFinalTime(null);startTimeRef.current=Date.now();
     if(clockRef.current)clearInterval(clockRef.current);
@@ -684,7 +703,7 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
     let branch=activeBranch;
     if(opening.branchAt!==undefined&&branch===null)branch=Math.floor(Math.random()*opening.branches.length);
     setActiveBranch(branch);setBoard(INIT_BOARD());setMoveIndex(0);setSelected(null);setLastMove(null);
-    setWrongMove(null);setCorrectSquare(null);setStatus("playing");setMoveHistory([]);setMistakes(0);setShowHint(false);
+    setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);setStatus("playing");setMoveHistory([]);setMistakes(0);setShowHint(false);
     setRevealed(false);setMistakeTriggered(null);setPunishmentDone(false);setRoundCount(prev=>prev+1);
     setElapsed(0);setFinalTime(null);startTimeRef.current=Date.now();
     if(clockRef.current)clearInterval(clockRef.current);
@@ -692,7 +711,7 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
   },[opening,activeBranch]);
   useEffect(()=>{startRound();return()=>{if(clockRef.current)clearInterval(clockRef.current);};},[]);
   const isUserWhite=opening?.color==="white";
-  const activeMoves=opening?getActiveMoves(opening,activeBranch):[];
+  const activeMoves=useMemo(()=>opening?getActiveMoves(opening,activeBranch):[],[opening,activeBranch]);
   const isUserTurn=useCallback(idx=>{if(!opening)return false;return opening.color==="white"?idx%2===0:idx%2===1;},[opening]);
   useEffect(()=>{
     if(!opening||status!=="playing"||moveIndex>=activeMoves.length||punishmentDone)return;
@@ -732,7 +751,7 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
   },[moveIndex,opening,status,mistakes,session,setSR,activeMoves,punishmentDone]);
   const handleSquareClick=(r,c)=>{
     if(!opening||status!=="playing")return;
-    if(punishmentDone)return;if(wrongMove){setWrongMove(null);setCorrectSquare(null);}
+    if(punishmentDone)return;if(wrongMove){setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);}
     if(mistakeTriggered&&!punishmentDone){
       const pm=mistakeTriggered.punishment;const[pfr,pfc]=sq(pm.from),[ptr,ptc]=sq(pm.to);
       if(!selected){if(board[r][c]){const p=board[r][c];if(isUserWhite?p===p.toUpperCase():p===p.toLowerCase())setSelected([r,c]);}return;}
@@ -741,7 +760,7 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
       if(selected[0]===pfr&&selected[1]===pfc&&r===ptr&&c===ptc){
         setBoard(prev=>applyMove(prev,pm.from,pm.to,pm.extra));setLastMove({from:[pfr,pfc],to:[ptr,ptc]});
         setMoveHistory(prev=>[...prev,pm.san]);setPunishmentDone(true);setSelected(null);
-      }else{setWrongMove([r,c]);setCorrectSquare([ptr,ptc]);setMistakes(prev=>prev+1);setSelected(null);setTimeout(()=>{setWrongMove(null);setCorrectSquare(null);},2000);}
+      }else{setWrongMove([r,c]);setCorrectSquare([ptr,ptc]);setCorrectFrom([pfr,pfc]);setCorrectSan(pm.san);setMistakes(prev=>prev+1);setSelected(null);setTimeout(()=>{setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);},2000);}
       return;
     }
     if(!isUserTurn(moveIndex)||moveIndex>=activeMoves.length)return;
@@ -753,7 +772,7 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
       if(selected[0]===efr&&selected[1]===efc&&r===etr&&c===etc){
         setBoard(prev=>applyMove(prev,em.from,em.to,em.extra));setLastMove({from:[efr,efc],to:[etr,etc]});
         setMoveHistory(prev=>[...prev,em.san]);setMoveIndex(prev=>prev+1);setSelected(null);setShowHint(false);
-      }else{setWrongMove([r,c]);setCorrectSquare([etr,etc]);setMistakes(prev=>prev+1);setSelected(null);setTimeout(()=>{setWrongMove(null);setCorrectSquare(null);},2000);}
+      }else{setWrongMove([r,c]);setCorrectSquare([etr,etc]);setCorrectFrom([efr,efc]);setCorrectSan(em.san);setMistakes(prev=>prev+1);setSelected(null);setTimeout(()=>{setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);},2000);}
     }
   };
   const hint=()=>{setShowHint(true);setMistakes(prev=>prev+1);};
@@ -815,7 +834,7 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
       {status==="playing"&&!revealed&&!punishmentDone&&<div className="w-full" style={{padding:"10px 14px",borderRadius:10,background:"rgba(124,58,237,0.08)",border:"1px solid rgba(124,58,237,0.15)",color:"#c4b5fd",fontSize:13}}>🔮 What opening is this?</div>}
       {revealed&&status==="playing"&&!punishmentDone&&<div className="w-full" style={{padding:"10px 14px",borderRadius:10,background:"rgba(180,130,40,0.1)",border:"1px solid rgba(180,130,40,0.2)",color:"#fcd34d",fontSize:13}}>💡 {opening.name} — {opening.tip}</div>}
       <div className="relative">
-        <ChessBoard board={board} flipped={!isUserWhite} selected={selected} onSquareClick={handleSquareClick} lastMove={lastMove} wrongMove={wrongMove} correctSquare={correctSquare}/>
+        <ChessBoard board={board} flipped={!isUserWhite} selected={selected} onSquareClick={handleSquareClick} lastMove={lastMove} wrongMove={wrongMove} correctSquare={correctSquare} correctFrom={correctFrom} correctSan={correctSan}/>
         {status==="complete"&&(
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2" style={{background:"rgba(12,10,9,0.88)",borderRadius:14,backdropFilter:"blur(8px)",animation:"fadeIn 0.3s ease",zIndex:30}}>
             <div style={{fontSize:48}}>{mistakes===0?"🎯":mistakes<=2?"👍":"💪"}</div>
@@ -1004,3 +1023,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
 </body>
 </html>
+
