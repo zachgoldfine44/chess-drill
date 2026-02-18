@@ -6,7 +6,7 @@
 <title>♔ Opening Trainer</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f0d0a; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f0d0a; overflow-x: hidden; }
   .flex { display:flex; } .flex-col { flex-direction:column; } .items-center { align-items:center; }
   .justify-center { justify-content:center; } .justify-between { justify-content:space-between; }
   .gap-1\.5 { gap:6px; } .gap-2 { gap:8px; } .gap-3 { gap:12px; } .gap-4 { gap:16px; }
@@ -401,8 +401,10 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
     const measure = () => {
       if (containerRef.current) {
         const parentW = containerRef.current.parentElement?.clientWidth || 400;
-        const maxSz = Math.floor((Math.min(parentW, 520) - 8) / 8);
-        setSZ(Math.max(36, Math.min(60, maxSz)));
+        const viewportW = window.innerWidth;
+        const availW = Math.min(parentW, viewportW - 24, 520);
+        const maxSz = Math.floor((availW - 8) / 8);
+        setSZ(Math.max(32, Math.min(60, maxSz)));
       }
     };
     measure();
@@ -421,7 +423,7 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
     return {fx,fy,tx,ty};
   }, [wrongMove, correctSquare, flipped, SZ]);
   return (
-    <div ref={containerRef} className="relative" style={{width:SZ*8+6,height:SZ*8+6,maxWidth:"100%"}}>
+    <div ref={containerRef} className="relative" style={{width:SZ*8+6,height:SZ*8+6,maxWidth:"calc(100vw - 24px)",margin:"0 auto"}}>
       {/* Outer frame */}
       <div className="absolute inset-0 rounded-xl" style={{
         background:"linear-gradient(145deg, #8B6914 0%, #5C3D1E 50%, #3A2510 100%)",
