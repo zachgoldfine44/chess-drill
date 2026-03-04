@@ -101,16 +101,13 @@ const applyUciMove = (board, uci) => {
 
 const countPieces = (board) => board.flat().filter(Boolean).length;
 
-const getSuggestedTime = (rating, totalMoves) => {
-  // Blitz-realistic timing: ~5-15 seconds per player move, capped at 25s total
-  const playerMoves = Math.max(1, Math.ceil((totalMoves - 1) / 2));
-  let perMove;
-  if (rating < 1200) perMove = 5;
-  else if (rating < 1600) perMove = 7;
-  else if (rating < 2000) perMove = 9;
-  else if (rating < 2400) perMove = 12;
-  else perMove = 15;
-  return Math.min(perMove * playerMoves, 25) * 1000;
+const getSuggestedTime = (rating) => {
+  // Per-move time target based on difficulty
+  if (rating < 1200) return 5000;
+  if (rating < 1600) return 7000;
+  if (rating < 2000) return 10000;
+  if (rating < 2400) return 12000;
+  return 15000;
 };
 
 const OPENINGS = [
@@ -958,6 +955,7 @@ const TacticsView = ({ onBack }) => {
   const [status, setStatus] = useState("loading");
   const [mistakes, setMistakes] = useState(0);
   const [elapsed, setElapsed] = useState(0);
+  const [totalElapsed, setTotalElapsed] = useState(0);
   const [solutionIndex, setSolutionIndex] = useState(0);
   const [moveHistory, setMoveHistory] = useState([]);
   const [showHint, setShowHint] = useState(false);
@@ -1041,6 +1039,7 @@ const TacticsView = ({ onBack }) => {
     setStatus("setup");
     setMistakes(0);
     setElapsed(0);
+    setTotalElapsed(0);
     setSolutionIndex(1);
     setMoveHistory([]);
     setShowHint(false);
@@ -1114,11 +1113,13 @@ const TacticsView = ({ onBack }) => {
       setCorrectSan(null);
       setShowHint(false);
 
+      setTotalElapsed(prev => prev + elapsed);
+      setElapsed(0);
       if (solutionIndex + 1 >= puzzle.solutionUci.length) {
         if (clockRef.current) clearInterval(clockRef.current);
         setStatus("complete");
         setSolutionIndex(prev => prev + 1);
-        setSessionResults(prev => [...prev.slice(-19), { rating: puzzle.rating, perfect: mistakes === 0, time: elapsed }]);
+        setSessionResults(prev => [...prev.slice(-19), { rating: puzzle.rating, perfect: mistakes === 0, time: totalElapsed + elapsed }]);
       } else {
         setTimeout(() => {
           const opponentMove = puzzle.solutionUci[solutionIndex + 1];
@@ -1169,7 +1170,7 @@ const TacticsView = ({ onBack }) => {
   const playerMoveCount = Math.max(1, Math.ceil((puzzle.solutionUci.length - 1) / 2));
   const playerMovesDone = Math.max(0, Math.floor((solutionIndex - 1) / 2) + (status === "complete" ? 1 : 0));
   const timeSec = (elapsed / 1000).toFixed(1);
-  const targetMs = getSuggestedTime(puzzle.rating, puzzle.solutionUci.length);
+  const targetMs = getSuggestedTime(puzzle.rating);
   const targetSec = (targetMs / 1000).toFixed(0);
   const overTarget = elapsed > targetMs;
   const timerPct = Math.min(100, (elapsed / targetMs) * 100);
@@ -1235,10 +1236,10 @@ const TacticsView = ({ onBack }) => {
             <div style={{fontSize:14,color:"#C4B5FD"}}>Rating: {puzzle.rating}</div>
             <div style={{fontSize:14,color:"#E8E4F8"}}>{mistakes} mistake{mistakes!==1?"s":""}</div>
             {elapsed > 0 && (
-              <div style={{fontSize:13,color:"#C4B5FD"}}>Time: {(elapsed/1000).toFixed(1)}s / {targetSec}s {elapsed <= targetMs && "⚡"}</div>
+              <div style={{fontSize:13,color:"#C4B5FD"}}>Time: {((totalElapsed + elapsed)/1000).toFixed(1)}s</div>
             )}
             <div style={{display:"flex",gap:10,marginTop:12,flexWrap:"wrap",justifyContent:"center"}}>
-              {(mistakes>0||elapsed>targetMs)&&<button onClick={()=>{const moves=puzzle.solutionUci;const{board:nb}=parseFEN(puzzle.fen);const setupBoard=applyUciMove(nb,moves[0]);setBoard(setupBoard);setLastMove({from:sq(moves[0].substring(0,2)),to:sq(moves[0].substring(2,4))});setStatus("playing");setMistakes(0);setElapsed(0);setSolutionIndex(1);setMoveHistory([]);setShowHint(false);setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);if(clockRef.current)clearInterval(clockRef.current);clockRef.current=setInterval(()=>setElapsed(e=>e+100),100);}} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#E8722A",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(232,114,42,0.4)"}}>🔁 Retry</button>}
+              {(mistakes>0||elapsed>targetMs)&&<button onClick={()=>{const moves=puzzle.solutionUci;const{board:nb}=parseFEN(puzzle.fen);const setupBoard=applyUciMove(nb,moves[0]);setBoard(setupBoard);setLastMove({from:sq(moves[0].substring(0,2)),to:sq(moves[0].substring(2,4))});setStatus("playing");setMistakes(0);setElapsed(0);setTotalElapsed(0);setSolutionIndex(1);setMoveHistory([]);setShowHint(false);setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);if(clockRef.current)clearInterval(clockRef.current);clockRef.current=setInterval(()=>setElapsed(e=>e+100),100);}} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#E8722A",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(232,114,42,0.4)"}}>🔁 Retry</button>}
               <button onClick={() => loadPuzzle()} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#059669",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(5,150,105,0.4)"}}>⚡ Next Puzzle</button>
             </div>
             <a href={`https://lichess.org/training/${puzzle.id}`} target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:"#A78BFA",textDecoration:"underline",marginTop:4}}>View on Lichess</a>
