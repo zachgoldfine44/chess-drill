@@ -1142,9 +1142,9 @@ const TacticsView = ({ onBack }) => {
   if (status === "loading") {
     return (
       <div className="flex flex-col items-center gap-4 w-full max-w-xl mx-auto" style={{animation:"fadeIn 0.3s ease"}}>
-        <button onClick={onBack} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>\u2190 Back</button>
+        <button onClick={onBack} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>← Back</button>
         <div style={{fontSize:14,color:"#8B8BA0",textAlign:"center"}}>
-          <div style={{fontSize:32,marginBottom:8}}>\u23f3</div>
+          <div style={{fontSize:32,marginBottom:8}}>⏳</div>
           Loading puzzles from Lichess...
         </div>
       </div>
@@ -1154,9 +1154,9 @@ const TacticsView = ({ onBack }) => {
   if (status === "error") {
     return (
       <div className="flex flex-col items-center gap-4 w-full max-w-xl mx-auto" style={{animation:"fadeIn 0.3s ease"}}>
-        <button onClick={onBack} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>\u2190 Back</button>
+        <button onClick={onBack} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>← Back</button>
         <div style={{fontSize:14,color:"#DC2626",textAlign:"center"}}>
-          <div style={{fontSize:32,marginBottom:8}}>\u26a0\ufe0f</div>
+          <div style={{fontSize:32,marginBottom:8}}>⚠️</div>
           Could not load puzzles. Check your internet connection.
           <div style={{marginTop:12}}><button onClick={() => { setStatus("loading"); fetchPuzzles().then(p => { if(p.length>0) setPuzzlePool(p); else setStatus("error"); }); }} style={{padding:"8px 18px",borderRadius:10,background:"#059669",color:"white",fontWeight:600,fontSize:13,border:"none",cursor:"pointer"}}>Retry</button></div>
         </div>
@@ -1178,10 +1178,10 @@ const TacticsView = ({ onBack }) => {
   return (
     <div className="flex flex-col items-center gap-4 w-full max-w-xl mx-auto" style={{animation:"fadeIn 0.3s ease"}}>
       <div className="w-full flex items-center justify-between">
-        <button onClick={onBack} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>\u2190 Back</button>
+        <button onClick={onBack} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>← Back</button>
         <div className="text-center">
-          <div style={{fontSize:18,fontWeight:800,color:"#2D2B6B"}}>\ud83e\udde9 Tactics</div>
-          <div style={{fontSize:12,color:"#8B8BA0"}}>Rating: {puzzle.rating} \u2022 {playerMoveCount} move{playerMoveCount>1?"s":""}</div>
+          <div style={{fontSize:18,fontWeight:800,color:"#2D2B6B"}}>🧩 Tactics</div>
+          <div style={{fontSize:12,color:"#8B8BA0"}}>{status === "complete" || status === "no-more" ? `Rating: ${puzzle.rating} • ${playerMoveCount} move${playerMoveCount>1?"s":""}` : "Find the best move"}</div>
         </div>
         <div style={{width:60}}/>
       </div>
@@ -1203,7 +1203,7 @@ const TacticsView = ({ onBack }) => {
       <div className="w-full" style={{padding:"8px 14px",borderRadius:12,background:"#FFFFFF",border:`1.5px solid ${overTarget?"#EF444440":"#E2DFD6"}`,boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
-            <span style={{fontSize:11,color:"#8B8BA0"}}>\u23f1</span>
+            <span style={{fontSize:11,color:"#8B8BA0"}}>⏱</span>
             <span style={{fontSize:15,fontWeight:700,fontFamily:"'SF Mono','Courier New',monospace",color:overTarget?"#DC2626":timerPct>75?"#A16207":"#0369A1",letterSpacing:"-0.02em"}}>{timeSec}s</span>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
@@ -1222,7 +1222,7 @@ const TacticsView = ({ onBack }) => {
 
       {(status === "playing" || status === "setup") && (
         <div className="w-full" style={{padding:"10px 14px",borderRadius:12,background:"#F3F0FF",border:"1.5px solid #7C3AED30",color:"#5B21B6",fontSize:13,fontWeight:500}}>
-          {status === "setup" ? "Watch the opponent's move..." : `Find the best move (${playerMovesDone}/${playerMoveCount}) \u2014 ${mistakes} mistake${mistakes !== 1 ? "s" : ""}`}
+          {status === "setup" ? "Watch the opponent's move..." : `Find the best move — ${mistakes} mistake${mistakes !== 1 ? "s" : ""}`}
         </div>
       )}
 
@@ -1230,27 +1230,27 @@ const TacticsView = ({ onBack }) => {
         <ChessBoard board={board} flipped={!isPlayerWhite} selected={selected} onSquareClick={handleSquareClick} lastMove={lastMove} wrongMove={wrongMove} correctSquare={correctSquare} correctFrom={correctFrom} correctSan={correctSan}/>
         {status === "complete" && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3" style={{background:"rgba(45,43,107,0.92)",borderRadius:14,backdropFilter:"blur(8px)",animation:"fadeIn 0.3s ease",zIndex:30}}>
-            <div style={{fontSize:48}}>{mistakes===0?"\ud83c\udfaf":mistakes<=2?"\ud83d\udc4d":"\ud83d\udcaa"}</div>
+            <div style={{fontSize:48}}>{mistakes===0?"🎯":mistakes<=2?"👍":"💪"}</div>
             <div style={{fontSize:22,fontWeight:800,color:"white"}}>{mistakes===0?"Perfect!":mistakes<=2?"Good job!":"Keep practicing!"}</div>
             <div style={{fontSize:14,color:"#C4B5FD"}}>Rating: {puzzle.rating}</div>
             <div style={{fontSize:14,color:"#E8E4F8"}}>{mistakes} mistake{mistakes!==1?"s":""}</div>
             {elapsed > 0 && (
-              <div style={{fontSize:13,color:"#C4B5FD"}}>Time: {(elapsed/1000).toFixed(1)}s / {targetSec}s {elapsed <= targetMs && "\u26a1"}</div>
+              <div style={{fontSize:13,color:"#C4B5FD"}}>Time: {(elapsed/1000).toFixed(1)}s / {targetSec}s {elapsed <= targetMs && "⚡"}</div>
             )}
             <div style={{display:"flex",gap:10,marginTop:12,flexWrap:"wrap",justifyContent:"center"}}>
-              {(mistakes>0||elapsed>targetMs)&&<button onClick={()=>{const moves=puzzle.solutionUci;const{board:nb}=parseFEN(puzzle.fen);const setupBoard=applyUciMove(nb,moves[0]);setBoard(setupBoard);setLastMove({from:sq(moves[0].substring(0,2)),to:sq(moves[0].substring(2,4))});setStatus("playing");setMistakes(0);setElapsed(0);setSolutionIndex(1);setMoveHistory([]);setShowHint(false);setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);if(clockRef.current)clearInterval(clockRef.current);clockRef.current=setInterval(()=>setElapsed(e=>e+100),100);}} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#E8722A",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(232,114,42,0.4)"}}>\ud83d\udd01 Retry</button>}
-              <button onClick={() => loadPuzzle()} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#059669",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(5,150,105,0.4)"}}>\u26a1 Next Puzzle</button>
+              {(mistakes>0||elapsed>targetMs)&&<button onClick={()=>{const moves=puzzle.solutionUci;const{board:nb}=parseFEN(puzzle.fen);const setupBoard=applyUciMove(nb,moves[0]);setBoard(setupBoard);setLastMove({from:sq(moves[0].substring(0,2)),to:sq(moves[0].substring(2,4))});setStatus("playing");setMistakes(0);setElapsed(0);setSolutionIndex(1);setMoveHistory([]);setShowHint(false);setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);if(clockRef.current)clearInterval(clockRef.current);clockRef.current=setInterval(()=>setElapsed(e=>e+100),100);}} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#E8722A",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(232,114,42,0.4)"}}>🔁 Retry</button>}
+              <button onClick={() => loadPuzzle()} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#059669",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(5,150,105,0.4)"}}>⚡ Next Puzzle</button>
             </div>
             <a href={`https://lichess.org/training/${puzzle.id}`} target="_blank" rel="noopener noreferrer" style={{fontSize:12,color:"#A78BFA",textDecoration:"underline",marginTop:4}}>View on Lichess</a>
           </div>
         )}
         {status === "no-more" && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3" style={{background:"rgba(45,43,107,0.92)",borderRadius:14,backdropFilter:"blur(8px)",animation:"fadeIn 0.3s ease",zIndex:30}}>
-            <div style={{fontSize:48}}>\ud83c\udf89</div>
+            <div style={{fontSize:48}}>🎉</div>
             <div style={{fontSize:22,fontWeight:800,color:"white"}}>All puzzles solved!</div>
             <div style={{fontSize:14,color:"#C4B5FD"}}>Try another difficulty or load more</div>
             <div style={{display:"flex",gap:10}}>
-              <button onClick={() => { setUsedIds(new Set()); loadPuzzle(); }} style={{padding:"10px 22px",borderRadius:12,background:"#059669",color:"white",fontWeight:700,fontSize:14,border:"none",cursor:"pointer"}}>\u26a1 Load More</button>
+              <button onClick={() => { setUsedIds(new Set()); loadPuzzle(); }} style={{padding:"10px 22px",borderRadius:12,background:"#059669",color:"white",fontWeight:700,fontSize:14,border:"none",cursor:"pointer"}}>⚡ Load More</button>
               <button onClick={onBack} style={{padding:"10px 22px",borderRadius:12,background:"#5B4DA0",color:"white",fontWeight:700,fontSize:14,border:"none",cursor:"pointer"}}>Back</button>
             </div>
           </div>
@@ -1261,7 +1261,7 @@ const TacticsView = ({ onBack }) => {
         <div className="w-full flex items-center justify-between">
           <a href={`https://lichess.org/training/${puzzle.id}`} target="_blank" rel="noopener noreferrer" style={{fontSize:11,color:"#A78BFA",textDecoration:"none",opacity:0.7}}>Lichess #{puzzle.id}</a>
           <button onClick={()=>{setShowHint(true);setMistakes(prev=>prev+1);}} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>
-            {showHint&&puzzle.solutionUci[solutionIndex]?`Play ${puzzle.solutionUci[solutionIndex]}`:"Hint \ud83d\udca1"}
+            {showHint&&puzzle.solutionUci[solutionIndex]?`Play ${puzzle.solutionUci[solutionIndex]}`:"Hint 💡"}
           </button>
         </div>
       )}
@@ -1274,7 +1274,7 @@ const TacticsView = ({ onBack }) => {
               background:r.perfect?"#DCFCE7":"#FEE2E2",
               border:`1.5px solid ${r.perfect?"#22C55E40":"#EF444440"}`,
               color:r.perfect?"#15803D":"#DC2626",
-            }} title={`Rating ${r.rating}`}>{r.perfect?"\u2713":"\u2715"} {r.rating}</div>
+            }} title={`Rating ${r.rating}`}>{r.perfect?"✓":"✕"} {r.rating}</div>
           ))}
         </div>
       )}
