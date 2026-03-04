@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>♔ Chess Trainer</title>
+<title>â Chess Trainer</title>
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%232D2B6B'/><rect x='15' y='15' width='150' height='150' rx='28' fill='%23F5F0E8'/><path d='M90 30 C60 30 40 55 40 80 C40 95 50 108 65 115 L60 140 L120 140 L115 115 C130 108 140 95 140 80 C140 55 120 30 90 30Z' fill='%235B4DA0'/><circle cx='80' cy='65' r='8' fill='%23F5F0E8'/><path d='M70 90 Q90 110 110 90' stroke='%23E8722A' stroke-width='5' fill='none' stroke-linecap='round'/><rect x='55' y='135' width='70' height='12' rx='6' fill='%23E8722A'/></svg>"/>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%232D2B6B'/><text x='16' y='24' text-anchor='middle' font-size='22' fill='%23F5F0E8'>♞</text></svg>"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%232D2B6B'/><text x='16' y='24' text-anchor='middle' font-size='22' fill='%23F5F0E8'>â</text></svg>"/>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#F5F0E8">
@@ -43,7 +43,7 @@ const TACTICS_PUZZLES = {"beginner":[["r4bn1/Bpk1p1p1/8/5p2/P7/8/1PP1NP2/2KR1b2 
 <script type="text/babel">
 const { useState, useEffect, useCallback, useRef, useMemo } = React;
 
-const P = { K:"♔",Q:"♕",R:"♖",B:"♗",N:"♘",P:"♙",k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟" };
+const P = { K:"â",Q:"â",R:"â",B:"â",N:"â",P:"â",k:"â",q:"â",r:"â",b:"â",n:"â",p:"â" };
 const PIECE_IMG_CODE = { K:'wk',Q:'wq',R:'wr',B:'wb',N:'wn',P:'wp',k:'bk',q:'bq',r:'br',b:'bb',n:'bn',p:'bp' };
 const pieceImgUrl = p => `https://images.chesscomfiles.com/chess-themes/pieces/neo/150/${PIECE_IMG_CODE[p]}.png`;
 const INIT_BOARD = () => [
@@ -131,8 +131,8 @@ const OPENINGS = [
       {from:"f1",to:"c4",san:"Bc4"},{from:"d7",to:"d6",san:"d6"},
     ],
     mistakes:[
-      {atIndex:7,wrongMove:{from:"d8",to:"h4",san:"Qh4"},punishment:{from:"d4",to:"b5",san:"Nb5"},hint:"Qh4 is greedy — Nb5! threatens Nc7+ forking king and rook"},
-      {atIndex:9,wrongMove:{from:"g8",to:"h6",san:"Nh6"},punishment:{from:"d4",to:"c6",san:"Nxc6"},hint:"Nh6 is offside — Nxc6! You're way ahead in development"},
+      {atIndex:7,wrongMove:{from:"d8",to:"h4",san:"Qh4"},punishment:{from:"d4",to:"b5",san:"Nb5"},hint:"Qh4 is greedy â Nb5! threatens Nc7+ forking king and rook"},
+      {atIndex:9,wrongMove:{from:"g8",to:"h6",san:"Nh6"},punishment:{from:"d4",to:"c6",san:"Nxc6"},hint:"Nh6 is offside â Nxc6! You're way ahead in development"},
     ],
   },
   {
@@ -163,8 +163,8 @@ const OPENINGS = [
       ]},
     ],
     mistakes:[
-      {atIndex:3,wrongMove:{from:"f8",to:"c5",san:"Bc5"},punishment:{from:"f3",to:"e5",san:"Nxe5"},hint:"Bc5 doesn't protect e5 — Nxe5! grabs a free pawn"},
-      {atIndex:7,wrongMove:{from:"d7",to:"d6",san:"d6"},punishment:{from:"d4",to:"f5",san:"Nf5"},hint:"d6 is passive — Nf5! grabs a dominant outpost attacking g7 and e7"},
+      {atIndex:3,wrongMove:{from:"f8",to:"c5",san:"Bc5"},punishment:{from:"f3",to:"e5",san:"Nxe5"},hint:"Bc5 doesn't protect e5 â Nxe5! grabs a free pawn"},
+      {atIndex:7,wrongMove:{from:"d7",to:"d6",san:"d6"},punishment:{from:"d4",to:"f5",san:"Nf5"},hint:"d6 is passive â Nf5! grabs a dominant outpost attacking g7 and e7"},
     ],
   },
   {
@@ -180,7 +180,7 @@ const OPENINGS = [
       {from:"f1",to:"d3",san:"Bd3"},{from:"f8",to:"e7",san:"Be7"},
     ],
     mistakes:[
-      {atIndex:3,wrongMove:{from:"e7",to:"e6",san:"e6"},punishment:{from:"d2",to:"d4",san:"d4"},hint:"e6 without d5 first is passive — d4! seizes a huge center"},
+      {atIndex:3,wrongMove:{from:"e7",to:"e6",san:"e6"},punishment:{from:"d2",to:"d4",san:"d4"},hint:"e6 without d5 first is passive â d4! seizes a huge center"},
       {atIndex:7,wrongMove:{from:"c5",to:"d4",san:"cxd4"},punishment:{from:"c3",to:"d4",san:"cxd4"},hint:"cxd4 helps you! cxd4 gives the perfect center and Black's queen is exposed"},
     ],
   },
@@ -197,13 +197,13 @@ const OPENINGS = [
       {from:"f1",to:"e2",san:"Be2"},{from:"g8",to:"e7",san:"Nge7"},
     ],
     mistakes:[
-      {atIndex:5,wrongMove:{from:"f7",to:"f6",san:"f6"},punishment:{from:"f1",to:"d3",san:"Bd3"},hint:"f6 weakens kingside — develop freely with Bd3"},
-      {atIndex:7,wrongMove:{from:"c5",to:"d4",san:"cxd4"},punishment:{from:"c3",to:"d4",san:"cxd4"},hint:"cxd4 cxd4 — you keep a massive space advantage with the ideal d4+e5 center"},
+      {atIndex:5,wrongMove:{from:"f7",to:"f6",san:"f6"},punishment:{from:"f1",to:"d3",san:"Bd3"},hint:"f6 weakens kingside â develop freely with Bd3"},
+      {atIndex:7,wrongMove:{from:"c5",to:"d4",san:"cxd4"},punishment:{from:"c3",to:"d4",san:"cxd4"},hint:"cxd4 cxd4 â you keep a massive space advantage with the ideal d4+e5 center"},
     ],
   },
   {
     id:"vs-carokann-advance", name:"vs Caro-Kann: Advance", eco:"B12", color:"white", category:"Anti-CK",
-    description:"3.e5 gains space. Black's Bf5 is active — the tradeoff.",
+    description:"3.e5 gains space. Black's Bf5 is active â the tradeoff.",
     tip:"Nf3, Be2, O-O. h4 is a common plan for kingside space.",
     moves:[
       {from:"e2",to:"e4",san:"e4"},{from:"c7",to:"c6",san:"c6"},
@@ -216,12 +216,12 @@ const OPENINGS = [
     ],
     mistakes:[
       {atIndex:5,wrongMove:{from:"e7",to:"e5",san:"e5"},punishment:{from:"d4",to:"e5",san:"dxe5"},hint:"e5 drops a pawn! dxe5 wins material"},
-      {atIndex:7,wrongMove:{from:"h7",to:"h5",san:"h5"},punishment:{from:"f1",to:"d3",san:"Bd3"},hint:"h5 wastes time — Bd3! challenges the bishop, Bxd3 Qxd3 with a lead in development"},
+      {atIndex:7,wrongMove:{from:"h7",to:"h5",san:"h5"},punishment:{from:"f1",to:"d3",san:"Bd3"},hint:"h5 wastes time â Bd3! challenges the bishop, Bxd3 Qxd3 with a lead in development"},
     ],
   },
   {
     id:"vs-scandinavian", name:"vs Scandinavian", eco:"B01", color:"white", category:"Anti-Scandi",
-    description:"Capture and develop. Black's early queen gets chased — free tempi.",
+    description:"Capture and develop. Black's early queen gets chased â free tempi.",
     tip:"Every queen-chase move gains a tempo. Nc3+d4 builds a classical center.",
     moves:[
       {from:"e2",to:"e4",san:"e4"},{from:"d7",to:"d5",san:"d5"},
@@ -233,8 +233,8 @@ const OPENINGS = [
       {from:"d1",to:"d3",san:"Qxd3"},{from:"c7",to:"c6",san:"c6"},
     ],
     mistakes:[
-      {atIndex:5,wrongMove:{from:"d5",to:"d8",san:"Qd8"},punishment:{from:"d2",to:"d4",san:"d4"},hint:"Queen retreats — d4! Perfect center AND a development lead"},
-      {atIndex:7,wrongMove:{from:"e7",to:"e5",san:"e5"},punishment:{from:"d4",to:"d5",san:"d5"},hint:"e5 is misguided — d5! gains space and Black's queen on a5 runs out of squares"},
+      {atIndex:5,wrongMove:{from:"d5",to:"d8",san:"Qd8"},punishment:{from:"d2",to:"d4",san:"d4"},hint:"Queen retreats â d4! Perfect center AND a development lead"},
+      {atIndex:7,wrongMove:{from:"e7",to:"e5",san:"e5"},punishment:{from:"d4",to:"d5",san:"d5"},hint:"e5 is misguided â d5! gains space and Black's queen on a5 runs out of squares"},
     ],
   },
   {
@@ -254,12 +254,12 @@ const OPENINGS = [
     ],
     mistakes:[
       {atIndex:5,wrongMove:{from:"b8",to:"c6",san:"Nc6"},punishment:{from:"d2",to:"d4",san:"d4"},hint:"Nc6 instead of d6? d4! keeps the extra pawn with a great center"},
-      {atIndex:7,wrongMove:{from:"f8",to:"e7",san:"Be7"},punishment:{from:"d2",to:"d4",san:"d4"},hint:"Be7 forgets to grab e4 — d4! massive center, you're a pawn up with initiative"},
+      {atIndex:7,wrongMove:{from:"f8",to:"e7",san:"Be7"},punishment:{from:"d2",to:"d4",san:"d4"},hint:"Be7 forgets to grab e4 â d4! massive center, you're a pawn up with initiative"},
     ],
   },
   {
     id:"vs-philidor", name:"vs Philidor Defense", eco:"C41", color:"white", category:"Anti-Philidor",
-    description:"3.d4 claims the center. Black is solid but passive — you get space.",
+    description:"3.d4 claims the center. Black is solid but passive â you get space.",
     tip:"d4 Nf6 Nc3 gives the ideal center. Bc4 targets f7. Re1 presses.",
     moves:[
       {from:"e2",to:"e4",san:"e4"},{from:"e7",to:"e5",san:"e5"},
@@ -273,7 +273,7 @@ const OPENINGS = [
     ],
     mistakes:[
       {atIndex:5,wrongMove:{from:"c8",to:"g4",san:"Bg4"},punishment:{from:"d4",to:"e5",san:"dxe5"},hint:"Bg4 before developing? dxe5! opens the center while Black is behind"},
-      {atIndex:7,wrongMove:{from:"e5",to:"d4",san:"exd4"},punishment:{from:"f3",to:"d4",san:"Nxd4"},hint:"exd4 opens the position for you — Nxd4! dominant knight and e4 is a powerhouse"},
+      {atIndex:7,wrongMove:{from:"e5",to:"d4",san:"exd4"},punishment:{from:"f3",to:"d4",san:"Nxd4"},hint:"exd4 opens the position for you â Nxd4! dominant knight and e4 is a powerhouse"},
     ],
   },
   {
@@ -292,7 +292,7 @@ const OPENINGS = [
     ],
     mistakes:[
       {atIndex:5,wrongMove:{from:"e7",to:"e5",san:"e5"},punishment:{from:"d4",to:"e5",san:"dxe5"},hint:"e5 too early! dxe5 dxe5 Qxd8+ loses castling"},
-      {atIndex:7,wrongMove:{from:"b7",to:"b5",san:"b5"},punishment:{from:"e4",to:"e5",san:"e5"},hint:"b5 ignores development — e5! attacks the knight and blows open the center"},
+      {atIndex:7,wrongMove:{from:"b7",to:"b5",san:"b5"},punishment:{from:"e4",to:"e5",san:"e5"},hint:"b5 ignores development â e5! attacks the knight and blows open the center"},
     ],
   },
   
@@ -310,13 +310,13 @@ const OPENINGS = [
       {from:"b1",to:"c3",san:"Nc3"},{from:"f6",to:"e4",san:"Nxe4"},
     ],
     mistakes:[
-      {atIndex:6,wrongMove:{from:"g1",to:"g5",san:"Ng5"},punishment:{from:"d7",to:"d5",san:"d5"},hint:"Ng5 is the Fried Liver — d5! counter-strikes and refutes it"},
-      {atIndex:8,wrongMove:{from:"d2",to:"d3",san:"d3"},punishment:{from:"d7",to:"d5",san:"d5"},hint:"d3 is too passive — d5! blows open the center"},
+      {atIndex:6,wrongMove:{from:"g1",to:"g5",san:"Ng5"},punishment:{from:"d7",to:"d5",san:"d5"},hint:"Ng5 is the Fried Liver â d5! counter-strikes and refutes it"},
+      {atIndex:8,wrongMove:{from:"d2",to:"d3",san:"d3"},punishment:{from:"d7",to:"d5",san:"d5"},hint:"d3 is too passive â d5! blows open the center"},
     ],
   },
   {
     id:"black-vs-ruylopez", name:"vs Ruy Lopez (Closed)", eco:"C84", color:"black", category:"1.e4 e5",
-    description:"Closed Ruy Lopez. a6, Nf6, Be7, b5, O-O — rock-solid.",
+    description:"Closed Ruy Lopez. a6, Nf6, Be7, b5, O-O â rock-solid.",
     tip:"a6 forces the bishop. Ba4 Nf6 attacks e4. b5 Bb3 O-O gives you a fortress.",
     moves:[
       {from:"e2",to:"e4",san:"e4"},{from:"e7",to:"e5",san:"e5"},
@@ -330,14 +330,14 @@ const OPENINGS = [
       {from:"c2",to:"c3",san:"c3"},{from:"d7",to:"d6",san:"d6"},
     ],
     mistakes:[
-      {atIndex:6,wrongMove:{from:"b5",to:"c6",san:"Bxc6"},punishment:{from:"d7",to:"c6",san:"dxc6"},hint:"Bxc6 Exchange — dxc6! bishop pair + open d-file. You're happy!"},
-      {atIndex:8,wrongMove:{from:"f3",to:"g5",san:"Ng5"},punishment:{from:"d7",to:"d5",san:"d5"},hint:"Ng5 tries Bxf7+ — d5! counter-strikes in the center and refutes it"},
+      {atIndex:6,wrongMove:{from:"b5",to:"c6",san:"Bxc6"},punishment:{from:"d7",to:"c6",san:"dxc6"},hint:"Bxc6 Exchange â dxc6! bishop pair + open d-file. You're happy!"},
+      {atIndex:8,wrongMove:{from:"f3",to:"g5",san:"Ng5"},punishment:{from:"d7",to:"d5",san:"d5"},hint:"Ng5 tries Bxf7+ â d5! counter-strikes in the center and refutes it"},
     ],
   },
   {
     id:"black-vs-qgd", name:"vs Queen's Gambit (QGD)", eco:"D37", color:"black", category:"1.d4",
     description:"Rock-solid QGD. d5, e6, Nf6, Be7, castle, then find breaks.",
-    tip:"Don't capture c4 — d5 pawn is powerful. After castling, aim for c5 or e5 breaks.",
+    tip:"Don't capture c4 â d5 pawn is powerful. After castling, aim for c5 or e5 breaks.",
     moves:[
       {from:"d2",to:"d4",san:"d4"},{from:"d7",to:"d5",san:"d5"},
       {from:"c2",to:"c4",san:"c4"},{from:"e7",to:"e6",san:"e6"},
@@ -348,14 +348,14 @@ const OPENINGS = [
       {from:"a1",to:"c1",san:"Rc1"},{from:"c7",to:"c6",san:"c6"},
     ],
     mistakes:[
-      {atIndex:6,wrongMove:{from:"c4",to:"d5",san:"cxd5"},punishment:{from:"e6",to:"d5",san:"exd5"},hint:"cxd5 releases tension — exd5 solid center + easy development"},
-      {atIndex:12,wrongMove:{from:"e3",to:"e4",san:"e4"},punishment:{from:"d5",to:"e4",san:"dxe4"},hint:"e4 premature — dxe4! wins a pawn, Nxe4 Nxe4 Bxe7 Qxe7 and you're up"},
+      {atIndex:6,wrongMove:{from:"c4",to:"d5",san:"cxd5"},punishment:{from:"e6",to:"d5",san:"exd5"},hint:"cxd5 releases tension â exd5 solid center + easy development"},
+      {atIndex:12,wrongMove:{from:"e3",to:"e4",san:"e4"},punishment:{from:"d5",to:"e4",san:"dxe4"},hint:"e4 premature â dxe4! wins a pawn, Nxe4 Nxe4 Bxe7 Qxe7 and you're up"},
     ],
   },
   {
     id:"black-vs-london", name:"vs London System", eco:"D02", color:"black", category:"1.d4",
     description:"Against Bf4, challenge with c5 early. Contest the dark squares.",
-    tip:"c5 challenges d4. Nc6 and Bd6 contest dark squares. Bxd6 Qxd6 — active pieces.",
+    tip:"c5 challenges d4. Nc6 and Bd6 contest dark squares. Bxd6 Qxd6 â active pieces.",
     moves:[
       {from:"d2",to:"d4",san:"d4"},{from:"d7",to:"d5",san:"d5"},
       {from:"c1",to:"f4",san:"Bf4"},{from:"g8",to:"f6",san:"Nf6"},
@@ -366,13 +366,13 @@ const OPENINGS = [
       {from:"f4",to:"d6",san:"Bxd6"},{from:"d8",to:"d6",san:"Qxd6"},
     ],
     mistakes:[
-      {atIndex:4,wrongMove:{from:"e2",to:"e4",san:"e4"},punishment:{from:"d5",to:"e4",san:"dxe4"},hint:"e4 overambitious — dxe4! wins a pawn, Bf4 blocks the queen"},
-      {atIndex:6,wrongMove:{from:"d4",to:"c5",san:"dxc5"},punishment:{from:"e7",to:"e5",san:"e5"},hint:"dxc5 gives up the center — e5! attacks the bishop and seizes space"},
+      {atIndex:4,wrongMove:{from:"e2",to:"e4",san:"e4"},punishment:{from:"d5",to:"e4",san:"dxe4"},hint:"e4 overambitious â dxe4! wins a pawn, Bf4 blocks the queen"},
+      {atIndex:6,wrongMove:{from:"d4",to:"c5",san:"dxc5"},punishment:{from:"e7",to:"e5",san:"e5"},hint:"dxc5 gives up the center â e5! attacks the bishop and seizes space"},
     ],
   },
   {
     id:"black-vs-english", name:"vs English (1.c4)", eco:"A20", color:"black", category:"Others",
-    description:"1...e5 — Reversed Sicilian with an extra tempo.",
+    description:"1...e5 â Reversed Sicilian with an extra tempo.",
     tip:"Nc6 and Nf6 develop naturally. d5 is your key break.",
     moves:[
       {from:"c2",to:"c4",san:"c4"},{from:"e7",to:"e5",san:"e5"},
@@ -383,8 +383,8 @@ const OPENINGS = [
       {from:"f1",to:"g2",san:"Bg2"},{from:"d5",to:"b6",san:"Nb6"},
     ],
     mistakes:[
-      {atIndex:4,wrongMove:{from:"d2",to:"d3",san:"d3"},punishment:{from:"d7",to:"d5",san:"d5"},hint:"d3 is passive — d5! strikes the center immediately, cxd5 Nxd5 with great activity"},
-      {atIndex:6,wrongMove:{from:"d2",to:"d4",san:"d4"},punishment:{from:"e5",to:"d4",san:"exd4"},hint:"d4 premature — exd4! wins a pawn since Nxd4 Bb4 pins and wins"},
+      {atIndex:4,wrongMove:{from:"d2",to:"d3",san:"d3"},punishment:{from:"d7",to:"d5",san:"d5"},hint:"d3 is passive â d5! strikes the center immediately, cxd5 Nxd5 with great activity"},
+      {atIndex:6,wrongMove:{from:"d2",to:"d4",san:"d4"},punishment:{from:"e5",to:"d4",san:"exd4"},hint:"d4 premature â exd4! wins a pawn since Nxd4 Bb4 pins and wins"},
     ],
   },
   {
@@ -402,13 +402,13 @@ const OPENINGS = [
       {from:"c1",to:"e3",san:"Be3"},{from:"c5",to:"b6",san:"Bb6"},
     ],
     mistakes:[
-      {atIndex:4,wrongMove:{from:"g1",to:"g5",san:"Ng5"},punishment:{from:"d7",to:"d5",san:"d5"},hint:"Ng5 trick — d5! counter-attacks and wins"},
-      {atIndex:8,wrongMove:{from:"c1",to:"g5",san:"Bg5"},punishment:{from:"h7",to:"h6",san:"h6"},hint:"Bg5 before castling — h6! wins the bishop pair, Bxf6 Qxf6 and you're better"},
+      {atIndex:4,wrongMove:{from:"g1",to:"g5",san:"Ng5"},punishment:{from:"d7",to:"d5",san:"d5"},hint:"Ng5 trick â d5! counter-attacks and wins"},
+      {atIndex:8,wrongMove:{from:"c1",to:"g5",san:"Bg5"},punishment:{from:"h7",to:"h6",san:"h6"},hint:"Bg5 before castling â h6! wins the bishop pair, Bxf6 Qxf6 and you're better"},
     ],
   },
   {
     id:"black-vs-kgambit", name:"vs King's Gambit", eco:"C30", color:"black", category:"1.e4 e5",
-    description:"Falkbeer Counter-Gambit (2...d5) — fight back in the center!",
+    description:"Falkbeer Counter-Gambit (2...d5) â fight back in the center!",
     tip:"After exd5 e4, White's knight is pushed and you develop fast.",
     moves:[
       {from:"e2",to:"e4",san:"e4"},{from:"e7",to:"e5",san:"e5"},
@@ -420,14 +420,14 @@ const OPENINGS = [
       {from:"d1",to:"e2",san:"Qe2"},{from:"c8",to:"f5",san:"Bf5"},
     ],
     mistakes:[
-      {atIndex:4,wrongMove:{from:"f4",to:"e5",san:"fxe5"},punishment:{from:"d5",to:"e4",san:"dxe4"},hint:"fxe5 ignores the center — dxe4! grabs a second pawn, White's position collapses"},
-      {atIndex:10,wrongMove:{from:"f1",to:"d3",san:"Bd3"},punishment:{from:"e4",to:"f2",san:"Nxf2"},hint:"Bd3 leaves f2 hanging — Nxf2! forks king and rook"},
+      {atIndex:4,wrongMove:{from:"f4",to:"e5",san:"fxe5"},punishment:{from:"d5",to:"e4",san:"dxe4"},hint:"fxe5 ignores the center â dxe4! grabs a second pawn, White's position collapses"},
+      {atIndex:10,wrongMove:{from:"f1",to:"d3",san:"Bd3"},punishment:{from:"e4",to:"f2",san:"Nxf2"},hint:"Bd3 leaves f2 hanging â Nxf2! forks king and rook"},
     ],
   },
   {
     id:"black-vs-vienna", name:"vs Vienna Game", eco:"C26", color:"black", category:"1.e4 e5",
-    description:"Against 2.Nc3, play Nf6. If d4, exd4 Nxd4 Bb4 — active play.",
-    tip:"If 3.Bc4, you can play Nxe4! If 3.f4, play d5 — same counter-gambit.",
+    description:"Against 2.Nc3, play Nf6. If d4, exd4 Nxd4 Bb4 â active play.",
+    tip:"If 3.Bc4, you can play Nxe4! If 3.f4, play d5 â same counter-gambit.",
     moves:[
       {from:"e2",to:"e4",san:"e4"},{from:"e7",to:"e5",san:"e5"},
       {from:"b1",to:"c3",san:"Nc3"},{from:"g8",to:"f6",san:"Nf6"},
@@ -438,8 +438,8 @@ const OPENINGS = [
       {from:"f1",to:"d3",san:"Bd3"},{from:"d7",to:"d5",san:"d5"},
     ],
     mistakes:[
-      {atIndex:6,wrongMove:{from:"f1",to:"c4",san:"Bc4"},punishment:{from:"f6",to:"e4",san:"Nxe4"},hint:"Bc4 instead of d4 — Nxe4! grabs a free pawn, Nxe4 d5 forks"},
-      {atIndex:12,wrongMove:{from:"e4",to:"e5",san:"e5"},punishment:{from:"f6",to:"e4",san:"Ne4"},hint:"e5 pushes without support — Ne4! centralized knight dominates"},
+      {atIndex:6,wrongMove:{from:"f1",to:"c4",san:"Bc4"},punishment:{from:"f6",to:"e4",san:"Nxe4"},hint:"Bc4 instead of d4 â Nxe4! grabs a free pawn, Nxe4 d5 forks"},
+      {atIndex:12,wrongMove:{from:"e4",to:"e5",san:"e5"},punishment:{from:"f6",to:"e4",san:"Ne4"},hint:"e5 pushes without support â Ne4! centralized knight dominates"},
     ],
   },
 ];
@@ -526,7 +526,7 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
                       background:"#dc2626", color:"white", fontSize:10, fontWeight:700,
                       padding:"1px 6px", borderRadius:4, whiteSpace:"nowrap",
                       boxShadow:"0 2px 8px rgba(0,0,0,0.4)",
-                    }}>✕ Wrong</div>
+                    }}>â Wrong</div>
                   </div>
                 )}
                 {isCorrect && (
@@ -543,7 +543,7 @@ const ChessBoard = ({ board, flipped, selected, onSquareClick, lastMove, wrongMo
                       background:"#16a34a", color:"white", fontSize:10, fontWeight:700,
                       padding:"1px 6px", borderRadius:4, whiteSpace:"nowrap",
                       boxShadow:"0 2px 8px rgba(0,0,0,0.4)",
-                    }}>{correctSan||"Here ↑"}</div>
+                    }}>{correctSan||"Here â"}</div>
                   </div>
                 )}
                 {isCorrectFrom && (
@@ -659,22 +659,22 @@ const DrillView = ({ opening, sr, setSR, session, onBack }) => {
   return(
     <div className="flex flex-col items-center gap-4 w-full max-w-xl mx-auto" style={{animation:"fadeIn 0.3s ease"}}>
       <div className="w-full flex items-center justify-between">
-        <button onClick={onBack} className="px-3 py-1.5 rounded-lg text-sm font-semibold" style={{background:"#FFFFFF",color:"#5B4DA0",border:"1.5px solid #E2DFD6",borderRadius:10,boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>← Back</button>
+        <button onClick={onBack} className="px-3 py-1.5 rounded-lg text-sm font-semibold" style={{background:"#FFFFFF",color:"#5B4DA0",border:"1.5px solid #E2DFD6",borderRadius:10,boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>â Back</button>
         <div className="text-center">
           <div className="text-lg font-bold" style={{color:"#2D2B6B",letterSpacing:"-0.02em",fontWeight:800}}>{opening.name}</div>
-          <div style={{fontSize:12,color:"#8B8BA0"}}>{opening.color === "white" ? "♔" : "♚"} {opening.eco}{branchName&&<span style={{color:"#E8722A",fontWeight:600,marginLeft:6}}>→ {branchName}</span>}</div>
+          <div style={{fontSize:12,color:"#8B8BA0"}}>{opening.color === "white" ? "â" : "â"} {opening.eco}{branchName&&<span style={{color:"#E8722A",fontWeight:600,marginLeft:6}}>â {branchName}</span>}</div>
         </div>
         <div style={{padding:"4px 10px",borderRadius:99,fontSize:12,fontWeight:700,background:bc.bg,color:bc.text,border:`1.5px solid ${bc.border}`}}>{boxLabels[srData.box]}</div>
       </div>
-      <div className="w-full" style={{padding:"10px 14px",borderRadius:12,background:"#FFF7ED",border:"1.5px solid #FBBF2440",color:"#92400E",fontSize:13,fontWeight:500}}>💡 {currentTip}</div>
+      <div className="w-full" style={{padding:"10px 14px",borderRadius:12,background:"#FFF7ED",border:"1.5px solid #FBBF2440",color:"#92400E",fontSize:13,fontWeight:500}}>ð¡ {currentTip}</div>
       {opening.branchAt!==undefined&&moveIndex>=opening.branchAt&&activeBranch===null&&status==="playing"&&(
-        <div className="w-full" style={{padding:"10px 14px",borderRadius:12,background:"#F3F0FF",border:"1.5px solid #7C3AED40",color:"#5B21B6",fontSize:13,fontWeight:500}}>🔀 Branch! Choose: {opening.branches.map(b=>b.name).join(" or ")}</div>
+        <div className="w-full" style={{padding:"10px 14px",borderRadius:12,background:"#F3F0FF",border:"1.5px solid #7C3AED40",color:"#5B21B6",fontSize:13,fontWeight:500}}>ð Branch! Choose: {opening.branches.map(b=>b.name).join(" or ")}</div>
       )}
       <div className="relative">
         <ChessBoard board={board} flipped={!isUserWhite} selected={selected} onSquareClick={handleSquareClick} lastMove={lastMove} wrongMove={wrongMove} correctSquare={correctSquare} correctFrom={correctFrom} correctSan={correctSan}/>
         {status==="complete"&&(
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3" style={{background:"rgba(45,43,107,0.92)",borderRadius:14,backdropFilter:"blur(8px)",animation:"fadeIn 0.3s ease",zIndex:30}}>
-            <div style={{fontSize:48}}>{mistakes===0?"🎯":mistakes<=2?"👍":"💪"}</div>
+            <div style={{fontSize:48}}>{mistakes===0?"ð¯":mistakes<=2?"ð":"ðª"}</div>
             <div style={{fontSize:22,fontWeight:800,color:"white"}}>{mistakes===0?"Perfect!":mistakes<=2?"Good job!":"Keep practicing!"}</div>
             <div style={{fontSize:14,color:"#C4B5FD"}}>{mistakes} mistake{mistakes!==1?"s":""}</div>
             <div className="flex gap-2 mt-2">
@@ -690,7 +690,7 @@ const DrillView = ({ opening, sr, setSR, session, onBack }) => {
         </div>
         {status==="playing"&&isUserTurn(moveIndex)&&(
           <button onClick={hint} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",flexShrink:0,boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>
-            {showHint?`Play ${opening.branchAt===moveIndex&&activeBranch===null?opening.branches.map(b=>b.continuation[0].san).join("/"):currentExpected?.san}`:"Hint 💡"}
+            {showHint?`Play ${opening.branchAt===moveIndex&&activeBranch===null?opening.branches.map(b=>b.continuation[0].san).join("/"):currentExpected?.san}`:"Hint ð¡"}
           </button>
         )}
       </div>
@@ -815,14 +815,14 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
   return(
     <div className="flex flex-col items-center gap-4 w-full max-w-xl mx-auto" style={{animation:"fadeIn 0.3s ease"}}>
       <div className="w-full flex items-center justify-between">
-        <button onClick={onBack} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>← Back</button>
+        <button onClick={onBack} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>â Back</button>
         <div className="text-center">
           <div style={{fontSize:18,fontWeight:800,color:"#2D2B6B",display:"flex",alignItems:"center",gap:8,justifyContent:"center"}}>
-            <span style={{color:"#5B4DA0"}}>🎲</span> Blind Drill <span style={{fontSize:11,fontWeight:600,color:"#8B8BA0",background:"#E8E4DC",padding:"2px 8px",borderRadius:99}}>#{roundCount}</span>
+            <span style={{color:"#5B4DA0"}}>ð²</span> Blind Drill <span style={{fontSize:11,fontWeight:600,color:"#8B8BA0",background:"#E8E4DC",padding:"2px 8px",borderRadius:99}}>#{roundCount}</span>
           </div>
-          <div style={{fontSize:12,color:"#8B8BA0"}}>{status==="playing"&&!revealed?`${opening.color==="white"?"♔":"♚"} Identify the opening...`:revealed?opening.name:null}</div>
+          <div style={{fontSize:12,color:"#8B8BA0"}}>{status==="playing"&&!revealed?`${opening.color==="white"?"â":"â"} Identify the opening...`:revealed?opening.name:null}</div>
         </div>
-        <div style={{fontSize:14,color:"#5B4DA0",fontWeight:700,fontFamily:"'SF Mono','Courier New',monospace"}}>{recentPerfect}/{roundResults.length} 🎯</div>
+        <div style={{fontSize:14,color:"#5B4DA0",fontWeight:700,fontFamily:"'SF Mono','Courier New',monospace"}}>{recentPerfect}/{roundResults.length} ð¯</div>
       </div>
       <div className="w-full flex items-center justify-between px-1">
         <button onClick={()=>setPlusMistakes(!plusMistakes)} style={{
@@ -831,19 +831,19 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
           border:`1.5px solid ${plusMistakes?"#EF4444":"#E2DFD6"}`,
           color:plusMistakes?"#DC2626":"#8B8BA0",
           boxShadow:"0 1px 3px rgba(45,43,107,0.06)",
-        }}>{plusMistakes?"💥":"○"} Curveball Mode {plusMistakes?"ON":"OFF"}</button>
+        }}>{plusMistakes?"ð¥":"â"} Curveball Mode {plusMistakes?"ON":"OFF"}</button>
         {!revealed&&status==="playing"&&<button onClick={()=>setRevealed(true)} style={{fontSize:12,padding:"4px 12px",borderRadius:99,background:"#F3F0FF",color:"#5B21B6",fontWeight:600,border:"1.5px solid #7C3AED40",cursor:"pointer"}}>Peek</button>}
       </div>
       <div className="w-full" style={{padding:"8px 14px",borderRadius:12,background:"#FFFFFF",border:`1.5px solid ${overTarget?"#EF444440":"#E2DFD6"}`,boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
-            <span style={{fontSize:11,color:"#8B8BA0"}}>⏱</span>
+            <span style={{fontSize:11,color:"#8B8BA0"}}>â±</span>
             <span style={{fontSize:15,fontWeight:700,fontFamily:"'SF Mono','Courier New',monospace",color:overTarget?"#DC2626":timerPct>75?"#A16207":"#0369A1",letterSpacing:"-0.02em"}}>{timeSec}s</span>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
             <span style={{fontSize:11,color:"#8B8BA0"}}>target</span>
             <span style={{fontSize:13,fontWeight:600,fontFamily:"'SF Mono','Courier New',monospace",color:"#5B4DA0"}}>{targetSec}s</span>
-            <span style={{fontSize:11,color:"#8B8BA0"}}>({userMoveCount} moves × 3s)</span>
+            <span style={{fontSize:11,color:"#8B8BA0"}}>({userMoveCount} moves Ã 3s)</span>
           </div>
         </div>
         <div style={{width:"100%",height:6,borderRadius:3,background:"#E8E4DC",overflow:"hidden",position:"relative"}}>
@@ -855,26 +855,26 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
           {timerPct<120&&<div style={{position:"absolute",top:-1,bottom:-1,left:"100%",width:2,background:"#2D2B6B40",borderRadius:1}}/>}
         </div>
       </div>
-      {status==="playing"&&!revealed&&!punishmentDone&&<div className="w-full" style={{padding:"10px 14px",borderRadius:12,background:"#F3F0FF",border:"1.5px solid #7C3AED30",color:"#5B21B6",fontSize:13,fontWeight:500}}>🔮 What opening is this?</div>}
-      {revealed&&status==="playing"&&!punishmentDone&&<div className="w-full" style={{padding:"10px 14px",borderRadius:12,background:"#FFF7ED",border:"1.5px solid #FBBF2440",color:"#92400E",fontSize:13,fontWeight:500}}>💡 {opening.name} — {opening.tip}</div>}
+      {status==="playing"&&!revealed&&!punishmentDone&&<div className="w-full" style={{padding:"10px 14px",borderRadius:12,background:"#F3F0FF",border:"1.5px solid #7C3AED30",color:"#5B21B6",fontSize:13,fontWeight:500}}>ð® What opening is this?</div>}
+      {revealed&&status==="playing"&&!punishmentDone&&<div className="w-full" style={{padding:"10px 14px",borderRadius:12,background:"#FFF7ED",border:"1.5px solid #FBBF2440",color:"#92400E",fontSize:13,fontWeight:500}}>ð¡ {opening.name} â {opening.tip}</div>}
       <div className="relative">
         <ChessBoard board={board} flipped={!isUserWhite} selected={selected} onSquareClick={handleSquareClick} lastMove={lastMove} wrongMove={wrongMove} correctSquare={correctSquare} correctFrom={correctFrom} correctSan={correctSan}/>
         {status==="complete"&&(
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2" style={{background:"rgba(45,43,107,0.92)",borderRadius:14,backdropFilter:"blur(8px)",animation:"fadeIn 0.3s ease",zIndex:30}}>
-            <div style={{fontSize:48}}>{mistakes===0?"🎯":mistakes<=2?"👍":"💪"}</div>
+            <div style={{fontSize:48}}>{mistakes===0?"ð¯":mistakes<=2?"ð":"ðª"}</div>
             <div style={{fontSize:18,fontWeight:800,color:"white"}}>{opening.name}</div>
-            <div style={{fontSize:12,color:"#C4B5FD"}}>{opening.eco} • {opening.color}{punishmentDone&&<span style={{color:"#86EFAC",marginLeft:6}}>• punished!</span>}</div>
+            <div style={{fontSize:12,color:"#C4B5FD"}}>{opening.eco} â¢ {opening.color}{punishmentDone&&<span style={{color:"#86EFAC",marginLeft:6}}>â¢ punished!</span>}</div>
             <div style={{fontSize:14,color:"#E8E4F8"}}>{mistakes===0?"Perfect!":`${mistakes} mistake${mistakes!==1?"s":""}`}</div>
             {finalTime!==null&&(
               <div style={{display:"flex",alignItems:"center",gap:6,marginTop:2}}>
                 <span style={{fontSize:13,fontWeight:700,fontFamily:"'SF Mono','Courier New',monospace",color:finalTime<=targetMs?"#4ADE80":"#FCA5A5"}}>{(finalTime/1000).toFixed(1)}s</span>
                 <span style={{fontSize:11,color:"#C4B5FD"}}>/ {(targetMs/1000).toFixed(0)}s target</span>
-                {finalTime<=targetMs&&<span style={{fontSize:12}}>⚡</span>}
+                {finalTime<=targetMs&&<span style={{fontSize:12}}>â¡</span>}
               </div>
             )}
             <div style={{display:"flex",gap:10,marginTop:12,flexWrap:"wrap",justifyContent:"center"}}>
-              {(mistakes>0||finalTime>targetMs)&&<button onClick={repeatRound} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#E8722A",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(232,114,42,0.4)"}}>🔁 Repeat Drill</button>}
-              <button onClick={startRound} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#5B4DA0",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(91,77,160,0.4)"}}>⚡ Next — Rapid Fire</button>
+              {(mistakes>0||finalTime>targetMs)&&<button onClick={repeatRound} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#E8722A",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(232,114,42,0.4)"}}>ð Repeat Drill</button>}
+              <button onClick={startRound} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#5B4DA0",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(91,77,160,0.4)"}}>â¡ Next â Rapid Fire</button>
             </div>
           </div>
         )}
@@ -884,7 +884,7 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
           {fmtH.length>0?fmtH.join("  "):<span style={{color:"#8B8BA0",fontStyle:"italic"}}>{isUserTurn(0)?"Your move...":"Watching..."}</span>}
         </div>
         {status==="playing"&&(isUserTurn(moveIndex)||(mistakeTriggered&&!punishmentDone))&&(
-          <button onClick={hint} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",flexShrink:0,boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>{showHint?`Play ${curExp?.san}`:"Hint 💡"}</button>
+          <button onClick={hint} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",flexShrink:0,boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>{showHint?`Play ${curExp?.san}`:"Hint ð¡"}</button>
         )}
       </div>
       {roundResults.length>0&&(
@@ -895,7 +895,7 @@ const BlindDrillView = ({ sr, setSR, session, onBack }) => {
               background:r.perfect?"#DCFCE7":"#FEE2E2",
               border:`1.5px solid ${r.perfect?"#22C55E40":"#EF444440"}`,
               color:r.perfect?"#15803D":"#DC2626",
-            }} title={`${r.name}${r.time?` — ${(r.time/1000).toFixed(1)}s`:""}${r.punished?" (punished)":""}`}>{r.fast&&r.perfect?"⚡":r.perfect?"✓":"✕"} {r.name.split(":")[0].split("vs ").pop().substring(0,8)}{r.time?` ${(r.time/1000).toFixed(0)}s`:""}</div>
+            }} title={`${r.name}${r.time?` â ${(r.time/1000).toFixed(1)}s`:""}${r.punished?" (punished)":""}`}>{r.fast&&r.perfect?"â¡":r.perfect?"â":"â"} {r.name.split(":")[0].split("vs ").pop().substring(0,8)}{r.time?` ${(r.time/1000).toFixed(0)}s`:""}</div>
           ))}
         </div>
       )}
@@ -908,8 +908,8 @@ const ChessComImport = ({ onBack }) => {
   const [results,setResults]=useState(null);const [error,setError]=useState(null);
   const classify=(moves,zc)=>{
     if(moves.length<2)return"Unknown";const[w,b]=[moves[0],moves[1]];
-    if(zc==="white"){if(w==="e4"){if(b==="e5"){if(moves[2]==="Nf3"){if(moves[3]==="Nc6"&&moves[4]==="d4")return"Scotch ✅";if(moves[3]==="Nf6")return"Petrov"+(moves[4]==="Nxe5"?" ✅":" ⚠️");if(moves[3]==="d6")return"Philidor ✅";}return`e4 e5 ${moves[2]}`;}if(b==="c5")return"Sicilian"+(moves[2]==="c3"?" (Alapin) ✅":"");if(b==="e6")return"French ✅";if(b==="c6")return"Caro-Kann ✅";if(b==="d5")return"Scandinavian ✅";if(b==="d6")return"Pirc ✅";if(b==="g6")return"Modern ✅";return`e4 ${b}`;}return`${w}...`;}
-    else{if(w==="e4"&&b==="e5"){if(moves[2]==="Nf3"&&moves[3]==="Nc6"){if(moves[4]==="Bc4")return"Italian ✅";if(moves[4]==="Bb5")return"Ruy Lopez ✅";if(moves[4]==="d4")return"Scotch";}if(moves[2]==="Bc4")return"Bishop's Opening ✅";if(moves[2]==="Nc3")return"Vienna ✅";if(moves[2]==="f4")return"King's Gambit ✅";return`e4 e5 ${moves[2]}`;}if(w==="d4"){if(b==="d5"){if(moves[2]==="c4")return"QGD ✅";if(moves[2]==="Bf4"||(moves[2]==="Nf3"&&moves[4]==="Bf4"))return"London ✅";return`d4 d5 ${moves[2]}`;}return`d4 ${b}`;}if(w==="c4")return"English ✅";return`${w}...`;}
+    if(zc==="white"){if(w==="e4"){if(b==="e5"){if(moves[2]==="Nf3"){if(moves[3]==="Nc6"&&moves[4]==="d4")return"Scotch â";if(moves[3]==="Nf6")return"Petrov"+(moves[4]==="Nxe5"?" â":" â ï¸");if(moves[3]==="d6")return"Philidor â";}return`e4 e5 ${moves[2]}`;}if(b==="c5")return"Sicilian"+(moves[2]==="c3"?" (Alapin) â":"");if(b==="e6")return"French â";if(b==="c6")return"Caro-Kann â";if(b==="d5")return"Scandinavian â";if(b==="d6")return"Pirc â";if(b==="g6")return"Modern â";return`e4 ${b}`;}return`${w}...`;}
+    else{if(w==="e4"&&b==="e5"){if(moves[2]==="Nf3"&&moves[3]==="Nc6"){if(moves[4]==="Bc4")return"Italian â";if(moves[4]==="Bb5")return"Ruy Lopez â";if(moves[4]==="d4")return"Scotch";}if(moves[2]==="Bc4")return"Bishop's Opening â";if(moves[2]==="Nc3")return"Vienna â";if(moves[2]==="f4")return"King's Gambit â";return`e4 e5 ${moves[2]}`;}if(w==="d4"){if(b==="d5"){if(moves[2]==="c4")return"QGD â";if(moves[2]==="Bf4"||(moves[2]==="Nf3"&&moves[4]==="Bf4"))return"London â";return`d4 d5 ${moves[2]}`;}return`d4 ${b}`;}if(w==="c4")return"English â";return`${w}...`;}
   };
   const fetchGames=async()=>{
     setLoading(true);setError(null);setResults(null);
@@ -924,8 +924,8 @@ const ChessComImport = ({ onBack }) => {
   return(
     <div className="flex flex-col gap-4 w-full max-w-xl mx-auto" style={{animation:"fadeIn 0.3s ease"}}>
       <div className="flex items-center justify-between">
-        <button onClick={onBack} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>← Back</button>
-        <div style={{fontSize:18,fontWeight:800,color:"#2D2B6B"}}>📥 Chess.com Import</div><div style={{width:60}}/>
+        <button onClick={onBack} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>â Back</button>
+        <div style={{fontSize:18,fontWeight:800,color:"#2D2B6B"}}>ð¥ Chess.com Import</div><div style={{width:60}}/>
       </div>
       <div style={{padding:16,borderRadius:14,background:"#FFFFFF",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>
         <div style={{fontSize:13,color:"#6B6B80",marginBottom:12}}>Fetch recent blitz &amp; rapid games and see which openings you face vs. the trainer.</div>
@@ -940,10 +940,10 @@ const ChessComImport = ({ onBack }) => {
         <div className="flex flex-col gap-2">
           <div style={{fontSize:13,color:"#6B6B80"}}><strong style={{color:"#2D2B6B"}}>{results.total}</strong> games analyzed:</div>
           {results.openings.map(([name,data],i)=>{
-            const ok=name.includes("✅"),warn=name.includes("⚠️");
+            const ok=name.includes("â"),warn=name.includes("â ï¸");
             const wr=data.count>0?Math.round(data.wins/data.count*100):0;
             return(<div key={i} style={{padding:"8px 12px",borderRadius:10,fontSize:13,background:ok?"#DCFCE7":warn?"#FEF9C3":"#FFFFFF",border:`1.5px solid ${ok?"#22C55E30":warn?"#EAB30830":"#E2DFD6"}`,display:"flex",justifyContent:"space-between",alignItems:"center",boxShadow:"0 1px 2px rgba(45,43,107,0.04)"}}>
-              <div className="flex items-center gap-2"><span style={{fontSize:11,padding:"2px 6px",borderRadius:6,fontWeight:600,background:data.color==="white"?"#F5F0E8":"#2D2B6B",color:data.color==="white"?"#1A1A2E":"#F5F0E8"}}>{data.color==="white"?"♔":"♚"}</span><span style={{color:ok?"#15803D":warn?"#A16207":"#1A1A2E",fontWeight:500}}>{name.replace(/ ✅| ⚠️/g,"")}</span></div>
+              <div className="flex items-center gap-2"><span style={{fontSize:11,padding:"2px 6px",borderRadius:6,fontWeight:600,background:data.color==="white"?"#F5F0E8":"#2D2B6B",color:data.color==="white"?"#1A1A2E":"#F5F0E8"}}>{data.color==="white"?"â":"â"}</span><span style={{color:ok?"#15803D":warn?"#A16207":"#1A1A2E",fontWeight:500}}>{name.replace(/ â| â ï¸/g,"")}</span></div>
               <div className="flex items-center gap-3" style={{fontSize:11,color:"#8B8BA0",fontWeight:600}}><span>{data.count}g</span><span style={{color:wr>=50?"#15803D":"#DC2626"}}>{wr}%</span></div>
             </div>);
           })}
@@ -1104,7 +1104,7 @@ const TacticsView = ({ onBack }) => {
   if (!puzzle) {
     return (
       <div className="flex flex-col items-center gap-4 w-full max-w-xl mx-auto" style={{animation:"fadeIn 0.3s ease"}}>
-        <button onClick={onBack} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>← Back</button>
+        <button onClick={onBack} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>â Back</button>
         <div style={{fontSize:14,color:"#8B8BA0"}}>Loading...</div>
       </div>
     );
@@ -1120,10 +1120,10 @@ const TacticsView = ({ onBack }) => {
   return (
     <div className="flex flex-col items-center gap-4 w-full max-w-xl mx-auto" style={{animation:"fadeIn 0.3s ease"}}>
       <div className="w-full flex items-center justify-between">
-        <button onClick={onBack} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>← Back</button>
+        <button onClick={onBack} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>â Back</button>
         <div className="text-center">
-          <div style={{fontSize:18,fontWeight:800,color:"#2D2B6B"}}>🧩 Tactics</div>
-          <div style={{fontSize:12,color:"#8B8BA0"}}>Rating: {puzzle.rating} • {puzzle.themes}</div>
+          <div style={{fontSize:18,fontWeight:800,color:"#2D2B6B"}}>ð§© Tactics</div>
+          <div style={{fontSize:12,color:"#8B8BA0"}}>Rating: {puzzle.rating} â¢ {puzzle.themes}</div>
         </div>
         <div style={{width:60}}/>
       </div>
@@ -1145,7 +1145,7 @@ const TacticsView = ({ onBack }) => {
       <div className="w-full" style={{padding:"8px 14px",borderRadius:12,background:"#FFFFFF",border:`1.5px solid ${overTarget?"#EF444440":"#E2DFD6"}`,boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
-            <span style={{fontSize:11,color:"#8B8BA0"}}>⏱</span>
+            <span style={{fontSize:11,color:"#8B8BA0"}}>â±</span>
             <span style={{fontSize:15,fontWeight:700,fontFamily:"'SF Mono','Courier New',monospace",color:overTarget?"#DC2626":timerPct>75?"#A16207":"#0369A1",letterSpacing:"-0.02em"}}>{timeSec}s</span>
           </div>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
@@ -1164,7 +1164,7 @@ const TacticsView = ({ onBack }) => {
 
       {status === "playing" && (
         <div className="w-full" style={{padding:"10px 14px",borderRadius:12,background:"#F3F0FF",border:"1.5px solid #7C3AED30",color:"#5B21B6",fontSize:13,fontWeight:500}}>
-          Find the best move ({solutionIndex}/{puzzle.solutionUci.length}) — {mistakes} mistake{mistakes !== 1 ? "s" : ""}
+          Find the best move ({solutionIndex}/{puzzle.solutionUci.length}) â {mistakes} mistake{mistakes !== 1 ? "s" : ""}
         </div>
       )}
 
@@ -1172,22 +1172,22 @@ const TacticsView = ({ onBack }) => {
         <ChessBoard board={board} flipped={!isPlayerWhite} selected={selected} onSquareClick={handleSquareClick} lastMove={lastMove} wrongMove={wrongMove} correctSquare={correctSquare} correctFrom={correctFrom} correctSan={correctSan}/>
         {status === "complete" && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3" style={{background:"rgba(45,43,107,0.92)",borderRadius:14,backdropFilter:"blur(8px)",animation:"fadeIn 0.3s ease",zIndex:30}}>
-            <div style={{fontSize:48}}>{mistakes===0?"🎯":mistakes<=2?"👍":"💪"}</div>
+            <div style={{fontSize:48}}>{mistakes===0?"ð¯":mistakes<=2?"ð":"ðª"}</div>
             <div style={{fontSize:22,fontWeight:800,color:"white"}}>{mistakes===0?"Perfect!":mistakes<=2?"Good job!":"Keep practicing!"}</div>
             <div style={{fontSize:14,color:"#C4B5FD"}}>Rating: {puzzle.rating}</div>
             <div style={{fontSize:14,color:"#E8E4F8"}}>{mistakes} mistake{mistakes!==1?"s":""}</div>
             {elapsed && (
-              <div style={{fontSize:13,color:"#C4B5FD"}}>Time: {(elapsed/1000).toFixed(1)}s / {targetSec}s {elapsed <= targetMs && "⚡"}</div>
+              <div style={{fontSize:13,color:"#C4B5FD"}}>Time: {(elapsed/1000).toFixed(1)}s / {targetSec}s {elapsed <= targetMs && "â¡"}</div>
             )}
             <div style={{display:"flex",gap:10,marginTop:12,flexWrap:"wrap",justifyContent:"center"}}>
-              {(mistakes>0||elapsed>targetMs)&&<button onClick={()=>{const{board:nb}=parseFEN(puzzle.fen);setBoard(nb);setStatus("playing");setMistakes(0);setElapsed(0);setSolutionIndex(0);setMoveHistory([]);setShowHint(false);setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);if(clockRef.current)clearInterval(clockRef.current);clockRef.current=setInterval(()=>setElapsed(e=>e+100),100);}} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#E8722A",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(232,114,42,0.4)"}}>🔁 Retry</button>}
-              <button onClick={loadPuzzle} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#059669",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(5,150,105,0.4)"}}>⚡ Next Puzzle</button>
+              {(mistakes>0||elapsed>targetMs)&&<button onClick={()=>{const{board:nb}=parseFEN(puzzle.fen);setBoard(nb);setStatus("playing");setMistakes(0);setElapsed(0);setSolutionIndex(0);setMoveHistory([]);setShowHint(false);setWrongMove(null);setCorrectSquare(null);setCorrectFrom(null);setCorrectSan(null);if(clockRef.current)clearInterval(clockRef.current);clockRef.current=setInterval(()=>setElapsed(e=>e+100),100);}} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#E8722A",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(232,114,42,0.4)"}}>ð Retry</button>}
+              <button onClick={loadPuzzle} style={{padding:"10px 24px",borderRadius:12,fontWeight:700,fontSize:14,background:"#059669",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(5,150,105,0.4)"}}>â¡ Next Puzzle</button>
             </div>
           </div>
         )}
         {status === "no-more" && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3" style={{background:"rgba(45,43,107,0.92)",borderRadius:14,backdropFilter:"blur(8px)",animation:"fadeIn 0.3s ease",zIndex:30}}>
-            <div style={{fontSize:48}}>🎉</div>
+            <div style={{fontSize:48}}>ð</div>
             <div style={{fontSize:22,fontWeight:800,color:"white"}}>All puzzles complete!</div>
             <div style={{fontSize:14,color:"#C4B5FD"}}>Try another difficulty level</div>
             <button onClick={onBack} style={{padding:"10px 22px",borderRadius:12,background:"#5B4DA0",color:"white",fontWeight:700,fontSize:14,border:"none",cursor:"pointer"}}>Back to Dashboard</button>
@@ -1198,7 +1198,7 @@ const TacticsView = ({ onBack }) => {
       {status==="playing"&&(
         <div className="w-full flex items-center justify-end">
           <button onClick={()=>{setShowHint(true);setMistakes(prev=>prev+1);}} style={{padding:"6px 14px",borderRadius:10,background:"#FFFFFF",color:"#5B4DA0",fontSize:13,fontWeight:600,border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>
-            {showHint&&puzzle.solutionUci[solutionIndex]?`Play ${puzzle.solutionUci[solutionIndex]}`:"Hint 💡"}
+            {showHint&&puzzle.solutionUci[solutionIndex]?`Play ${puzzle.solutionUci[solutionIndex]}`:"Hint ð¡"}
           </button>
         </div>
       )}
@@ -1211,7 +1211,7 @@ const TacticsView = ({ onBack }) => {
               background:r.perfect?"#DCFCE7":"#FEE2E2",
               border:`1.5px solid ${r.perfect?"#22C55E40":"#EF444440"}`,
               color:r.perfect?"#15803D":"#DC2626",
-            }} title={`Rating ${r.rating} - ${r.themes}`}>{r.perfect?"✓":"✕"} {r.rating}</div>
+            }} title={`Rating ${r.rating} - ${r.themes}`}>{r.perfect?"â":"â"} {r.rating}</div>
           ))}
         </div>
       )}
@@ -1244,14 +1244,14 @@ function App() {
     onMouseOver={e=>{e.currentTarget.style.transform="translateX(3px)";e.currentTarget.style.boxShadow="0 4px 12px rgba(45,43,107,0.1)";}}
     onMouseOut={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="0 1px 3px rgba(45,43,107,0.06)";}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <div><span style={{fontWeight:700,color:"#1A1A2E",fontSize:14}}>{o.name}</span><span style={{color:"#8B8BA0",fontSize:12,marginLeft:8}}>{o.eco}</span>{o.branchAt!==undefined&&<span style={{color:"#7C3AED",fontSize:12,marginLeft:4}}>🔀</span>}</div>
+        <div><span style={{fontWeight:700,color:"#1A1A2E",fontSize:14}}>{o.name}</span><span style={{color:"#8B8BA0",fontSize:12,marginLeft:8}}>{o.eco}</span>{o.branchAt!==undefined&&<span style={{color:"#7C3AED",fontSize:12,marginLeft:4}}>ð</span>}</div>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          {s.streak>=3&&<span style={{fontSize:12}}>🔥{s.streak}</span>}
+          {s.streak>=3&&<span style={{fontSize:12}}>ð¥{s.streak}</span>}
           <div style={{width:8,height:8,borderRadius:4,background:bc.dot}}/>
           <span style={{fontSize:12,fontWeight:700,color:bc.text}}>{boxLabels[s.box]}</span>
         </div>
       </div>
-      <div style={{fontSize:11,color:"#8B8BA0",marginTop:3}}>{o.category} • {o.branchAt?`${o.moves.length}+branch`:o.moves.length} moves{o.mistakes?.length>0?" • 💥":""}</div>
+      <div style={{fontSize:11,color:"#8B8BA0",marginTop:3}}>{o.category} â¢ {o.branchAt?`${o.moves.length}+branch`:o.moves.length} moves{o.mistakes?.length>0?" â¢ ð¥":""}</div>
     </button>
   );};
   return(
@@ -1259,21 +1259,21 @@ function App() {
       <style>{`@keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }`}</style>
       <div className="max-w-xl mx-auto" style={{animation:"fadeIn 0.4s ease"}}>
         <div style={{textAlign:"center",marginBottom:28}}>
-          <h1 style={{fontSize:30,fontWeight:900,color:"#2D2B6B",letterSpacing:"-0.03em",fontFamily:"-apple-system,BlinkMacSystemFont,'SF Pro Rounded',sans-serif",margin:0}}>♔ Chess Trainer</h1>
-          <p style={{color:"#8B8BA0",fontSize:13,margin:"6px 0 0",fontWeight:500}}>Openings • Tactics • Blind drill — Master chess faster</p>
+          <h1 style={{fontSize:30,fontWeight:900,color:"#2D2B6B",letterSpacing:"-0.03em",fontFamily:"-apple-system,BlinkMacSystemFont,'SF Pro Rounded',sans-serif",margin:0}}>â Chess Trainer</h1>
+          <p style={{color:"#8B8BA0",fontSize:13,margin:"6px 0 0",fontWeight:500}}>Openings â¢ Tactics â¢ Blind drill â Master chess faster</p>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:8,marginBottom:20}}>
-          {[{l:"Drilled",v:totalC+totalI,i:"📊"},{l:"Accuracy",v:totalC+totalI>0?Math.round(totalC/(totalC+totalI)*100)+"%":"—",i:"🎯"},{l:"Avg Box",v:avgBox,i:"📈"},{l:"Solid+",v:`${solidCount}/${OPENINGS.length}`,i:"⭐"}].map(({l,v,i})=>(
+          {[{l:"Drilled",v:totalC+totalI,i:"ð"},{l:"Accuracy",v:totalC+totalI>0?Math.round(totalC/(totalC+totalI)*100)+"%":"â",i:"ð¯"},{l:"Avg Box",v:avgBox,i:"ð"},{l:"Solid+",v:`${solidCount}/${OPENINGS.length}`,i:"â­"}].map(({l,v,i})=>(
             <div key={l} style={{background:"#FFFFFF",borderRadius:14,padding:"12px 8px",textAlign:"center",boxShadow:"0 1px 3px rgba(45,43,107,0.06)"}}>
               <div style={{fontSize:20,fontWeight:800,color:"#2D2B6B"}}>{v}</div>
               <div style={{fontSize:11,color:"#8B8BA0",fontWeight:500}}>{i} {l}</div>
             </div>
           ))}
         </div>
-        <button onClick={smartDrill} style={{width:"100%",marginBottom:10,padding:"16px 0",borderRadius:16,fontWeight:800,fontSize:17,background:"#E8722A",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(232,114,42,0.3)",letterSpacing:"-0.01em",transition:"transform 0.1s",}} onMouseDown={e=>e.currentTarget.style.transform="scale(0.98)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}>⚡ Smart Drill</button>
-        <button onClick={()=>setView("blind")} style={{width:"100%",marginBottom:10,padding:"16px 0",borderRadius:16,fontWeight:800,fontSize:17,background:"#5B4DA0",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(91,77,160,0.3)",letterSpacing:"-0.01em",transition:"transform 0.1s",}} onMouseDown={e=>e.currentTarget.style.transform="scale(0.98)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}>🎲 Blind Drill</button>
-        <button onClick={()=>setView("tactics")} style={{width:"100%",marginBottom:10,padding:"16px 0",borderRadius:16,fontWeight:800,fontSize:17,background:"linear-gradient(135deg, #059669, #10B981)",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(5,150,105,0.3)",letterSpacing:"-0.01em",transition:"transform 0.1s",}} onMouseDown={e=>e.currentTarget.style.transform="scale(0.98)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}>🧩 Tactics Training</button>
-        <button onClick={()=>setView("import")} style={{width:"100%",marginBottom:20,padding:"12px 0",borderRadius:14,fontWeight:600,fontSize:13,background:"#FFFFFF",color:"#5B4DA0",border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.04)"}}>📥 Import from Chess.com</button>
+        <button onClick={smartDrill} style={{width:"100%",marginBottom:10,padding:"16px 0",borderRadius:16,fontWeight:800,fontSize:17,background:"#E8722A",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(232,114,42,0.3)",letterSpacing:"-0.01em",transition:"transform 0.1s",}} onMouseDown={e=>e.currentTarget.style.transform="scale(0.98)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}>â¡ Smart Drill</button>
+        <button onClick={()=>setView("blind")} style={{width:"100%",marginBottom:10,padding:"16px 0",borderRadius:16,fontWeight:800,fontSize:17,background:"#5B4DA0",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(91,77,160,0.3)",letterSpacing:"-0.01em",transition:"transform 0.1s",}} onMouseDown={e=>e.currentTarget.style.transform="scale(0.98)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}>ð² Blind Drill</button>
+        <button onClick={()=>setView("tactics")} style={{width:"100%",marginBottom:10,padding:"16px 0",borderRadius:16,fontWeight:800,fontSize:17,background:"linear-gradient(135deg, #059669, #10B981)",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(5,150,105,0.3)",letterSpacing:"-0.01em",transition:"transform 0.1s",}} onMouseDown={e=>e.currentTarget.style.transform="scale(0.98)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}>ð§© Tactics Training</button>
+        <button onClick={()=>setView("import")} style={{width:"100%",marginBottom:20,padding:"12px 0",borderRadius:14,fontWeight:600,fontSize:13,background:"#FFFFFF",color:"#5B4DA0",border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.04)"}}>ð¥ Import from Chess.com</button>
         <div style={{display:"flex",gap:6,marginBottom:16}}>
           {["all","white","black"].map(f=>(
             <button key={f} onClick={()=>setFilter(f)} style={{
@@ -1282,7 +1282,7 @@ function App() {
               color:filter===f?"#FFFFFF":"#8B8BA0",
               border:`1.5px solid ${filter===f?"#2D2B6B":"#E2DFD6"}`,
               boxShadow:filter===f?"0 2px 8px rgba(45,43,107,0.2)":"none",
-            }}>{f==="all"?"All Lines":f==="white"?"♔ White":"♚ Black"}</button>
+            }}>{f==="all"?"All Lines":f==="white"?"â White":"â Black"}</button>
           ))}
         </div>
         {filtered.filter(o=>o.color==="white").length>0&&(filter==="all"||filter==="white")&&(
@@ -1299,13 +1299,13 @@ function App() {
         )}
         <div style={{marginTop:24,padding:16,borderRadius:16,background:"#FFFFFF",boxShadow:"0 1px 3px rgba(45,43,107,0.06)",fontSize:13,color:"#6B6B80"}}>
           <div style={{fontWeight:800,color:"#2D2B6B",marginBottom:8}}>How This Works</div>
-          <p style={{margin:"0 0 8px"}}><span style={{color:"#1A1A2E",fontWeight:600}}>Leitner spaced repetition</span> — 5 mastery boxes. Perfect runs promote, mistakes demote.</p>
+          <p style={{margin:"0 0 8px"}}><span style={{color:"#1A1A2E",fontWeight:600}}>Leitner spaced repetition</span> â 5 mastery boxes. Perfect runs promote, mistakes demote.</p>
           <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:8}}>
             {[1,2,3,4,5].map(b=><span key={b} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"3px 10px",borderRadius:99,fontSize:11,fontWeight:600,background:boxColors[b].bg,color:boxColors[b].text,border:`1.5px solid ${boxColors[b].border}50`}}><span style={{width:6,height:6,borderRadius:3,background:boxColors[b].dot}}/>{boxLabels[b]}</span>)}
           </div>
-          <p style={{margin:"0 0 4px"}}><span style={{color:"#1A1A2E",fontWeight:600}}>🎲 Blind</span> — random color, hidden name. <span style={{color:"#1A1A2E",fontWeight:600}}>💥 Curveball Mode</span> — opponent blunders, you punish.</p>
-          <p style={{margin:"0 0 4px"}}><span style={{color:"#1A1A2E",fontWeight:600}}>🧩 Tactics</span> — solve puzzles with dynamic difficulty. Rated puzzles from beginner to master level.</p>
-          <p style={{margin:0}}><span style={{color:"#1A1A2E",fontWeight:600}}>🔀 Branching</span> — Scotch Nxc6: choose Schmidt (e5) or Mieses (Bd3) at the branch.</p>
+          <p style={{margin:"0 0 4px"}}><span style={{color:"#1A1A2E",fontWeight:600}}>ð² Blind</span> â random color, hidden name. <span style={{color:"#1A1A2E",fontWeight:600}}>ð¥ Curveball Mode</span> â opponent blunders, you punish.</p>
+          <p style={{margin:"0 0 4px"}}><span style={{color:"#1A1A2E",fontWeight:600}}>ð§© Tactics</span> â solve puzzles with dynamic difficulty. Rated puzzles from beginner to master level.</p>
+          <p style={{margin:0}}><span style={{color:"#1A1A2E",fontWeight:600}}>ð Branching</span> â Scotch Nxc6: choose Schmidt (e5) or Mieses (Bd3) at the branch.</p>
         </div>
       </div>
     </div>
