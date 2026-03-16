@@ -436,6 +436,80 @@ const OPENINGS = [
       {atIndex:12,wrongMove:{from:"e4",to:"e5",san:"e5"},punishment:{from:"f6",to:"e4",san:"Ne4"},hint:"e5 pushes without support — Ne4! centralized knight dominates"},
     ],
   },
+  // ===== CARO-KANN DEFENSE (BLACK) =====
+  {
+    id:"black-carokann-advance", name:"Caro-Kann: vs Advance", eco:"B12", color:"black", category:"1.e4",
+    description:"Against 3.e5, play Bf5 first (before e6!) to keep the bishop active. Then attack White's center with c5.",
+    tip:"Bf5 BEFORE e6 is the whole point of the Caro-Kann — your bishop escapes before the pawn chain locks it in. Think of it like leaving the house before locking the door.",
+    moves:[
+      {from:"e2",to:"e4",san:"e4"},{from:"c7",to:"c6",san:"c6"},
+      {from:"d2",to:"d4",san:"d4"},{from:"d7",to:"d5",san:"d5"},
+      {from:"e4",to:"e5",san:"e5"},{from:"c8",to:"f5",san:"Bf5"},
+      {from:"g1",to:"f3",san:"Nf3"},{from:"e7",to:"e6",san:"e6"},
+      {from:"f1",to:"e2",san:"Be2"},{from:"c6",to:"c5",san:"c5"},
+      {from:"e1",to:"g1",san:"O-O",extra:{castle:true,rookFrom:"h1",rookTo:"f1"}},{from:"b8",to:"c6",san:"Nc6"},
+      {from:"c2",to:"c3",san:"c3"},{from:"g8",to:"e7",san:"Nge7"},
+    ],
+    mistakes:[
+      {atIndex:4,wrongMove:{from:"b1",to:"c3",san:"Nc3"},punishment:{from:"d5",to:"e4",san:"dxe4"},hint:"Nc3 without protecting e4? Take it — dxe4!"},
+      {atIndex:8,wrongMove:{from:"c2",to:"c3",san:"c3"},punishment:{from:"c6",to:"c5",san:"c5"},hint:"c3 already? Break with c5 now — attack d4!"},
+    ],
+  },
+  {
+    id:"black-carokann-classical", name:"Caro-Kann: Classical", eco:"B18", color:"black", category:"1.e4",
+    description:"After 3.Nc3 dxe4 4.Nxe4, play Bf5 to kick the knight. The bishop stays active on g6.",
+    tip:"Bf5 is what makes the Caro-Kann tick — active bishop, unlike the French. After Ng3 Bg6, the bishop is perfectly placed. Nd7 prepares Ngf6 without blocking the c-pawn.",
+    moves:[
+      {from:"e2",to:"e4",san:"e4"},{from:"c7",to:"c6",san:"c6"},
+      {from:"d2",to:"d4",san:"d4"},{from:"d7",to:"d5",san:"d5"},
+      {from:"b1",to:"c3",san:"Nc3"},{from:"d5",to:"e4",san:"dxe4"},
+      {from:"c3",to:"e4",san:"Nxe4"},{from:"c8",to:"f5",san:"Bf5"},
+      {from:"e4",to:"g3",san:"Ng3"},{from:"f5",to:"g6",san:"Bg6"},
+      {from:"h2",to:"h4",san:"h4"},{from:"h7",to:"h6",san:"h6"},
+      {from:"g1",to:"f3",san:"Nf3"},{from:"b8",to:"d7",san:"Nd7"},
+    ],
+    mistakes:[
+      {atIndex:4,wrongMove:{from:"e4",to:"d5",san:"exd5"},punishment:{from:"c6",to:"d5",san:"cxd5"},hint:"exd5? Recapture cxd5 — you get a perfect center!"},
+      {atIndex:10,wrongMove:{from:"g1",to:"f3",san:"Nf3"},punishment:{from:"b8",to:"d7",san:"Nd7"},hint:"Nf3 instead of h4? Just develop — Nd7 prepares Ngf6."},
+    ],
+  },
+  // ===== KING'S INDIAN DEFENSE (BLACK) =====
+  {
+    id:"black-kid-classical", name:"King's Indian: Classical", eco:"E97", color:"black", category:"1.d4",
+    description:"Fianchetto the bishop, castle kingside, then break with ...e5. The ultimate fighting defense against 1.d4.",
+    tip:"The KID is a coiled spring — you let White have d4+e4, castle quickly, then explode with ...e5. Your dark-squared bishop on g7 is a monster once the center opens.",
+    moves:[
+      {from:"d2",to:"d4",san:"d4"},{from:"g8",to:"f6",san:"Nf6"},
+      {from:"c2",to:"c4",san:"c4"},{from:"g7",to:"g6",san:"g6"},
+      {from:"b1",to:"c3",san:"Nc3"},{from:"f8",to:"g7",san:"Bg7"},
+      {from:"e2",to:"e4",san:"e4"},{from:"d7",to:"d6",san:"d6"},
+      {from:"g1",to:"f3",san:"Nf3"},{from:"e8",to:"g8",san:"O-O",extra:{castle:true,rookFrom:"h8",rookTo:"f8"}},
+      {from:"f1",to:"e2",san:"Be2"},{from:"e7",to:"e5",san:"e5"},
+      {from:"e1",to:"g1",san:"O-O",extra:{castle:true,rookFrom:"h1",rookTo:"f1"}},{from:"b8",to:"c6",san:"Nc6"},
+    ],
+    mistakes:[
+      {atIndex:6,wrongMove:{from:"f1",to:"d3",san:"Bd3"},punishment:{from:"e7",to:"e5",san:"e5"},hint:"Bd3 blocks the d-file — strike now with e5!"},
+      {atIndex:10,wrongMove:{from:"c1",to:"g5",san:"Bg5"},punishment:{from:"e7",to:"e5",san:"e5"},hint:"Bg5 pins nothing useful — e5! challenges the center immediately."},
+    ],
+  },
+  {
+    id:"black-kid-fianchetto", name:"King's Indian: vs Fianchetto", eco:"E62", color:"black", category:"1.d4",
+    description:"When White plays g3+Bg2 instead of e4, castle and push ...e5 a bit later. Nbd7 first to support the break.",
+    tip:"Against the Fianchetto, White's setup is slower. Castle, develop Nbd7, then ...e5 is still the break — just one tempo later. White's g2 bishop is less scary than the e4 center.",
+    moves:[
+      {from:"d2",to:"d4",san:"d4"},{from:"g8",to:"f6",san:"Nf6"},
+      {from:"c2",to:"c4",san:"c4"},{from:"g7",to:"g6",san:"g6"},
+      {from:"g1",to:"f3",san:"Nf3"},{from:"f8",to:"g7",san:"Bg7"},
+      {from:"g2",to:"g3",san:"g3"},{from:"e8",to:"g8",san:"O-O",extra:{castle:true,rookFrom:"h8",rookTo:"f8"}},
+      {from:"f1",to:"g2",san:"Bg2"},{from:"d7",to:"d6",san:"d6"},
+      {from:"e1",to:"g1",san:"O-O",extra:{castle:true,rookFrom:"h1",rookTo:"f1"}},{from:"b8",to:"d7",san:"Nbd7"},
+      {from:"b1",to:"c3",san:"Nc3"},{from:"e7",to:"e5",san:"e5"},
+    ],
+    mistakes:[
+      {atIndex:6,wrongMove:{from:"b1",to:"c3",san:"Nc3"},punishment:{from:"e8",to:"g8",san:"O-O",extra:{castle:true,rookFrom:"h8",rookTo:"f8"}},hint:"Nc3 before g3? Castle — you're fine, just develop naturally."},
+      {atIndex:12,wrongMove:{from:"d4",to:"d5",san:"d5"},punishment:{from:"b8",to:"d7",san:"Nbd7"},hint:"d5 closes it — develop Nbd7 and prepare your e5 break."},
+    ],
+  },
 ];
 
 const initSR = () => { const d = {}; OPENINGS.forEach(o => { d[o.id] = {box:1,correct:0,incorrect:0,lastDrilled:0,streak:0}; }); return d; };
