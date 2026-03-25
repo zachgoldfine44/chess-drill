@@ -41,7 +41,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <script type="text/babel">
-const { useState, useEffect, useCallback, useRef, useMemo } = React;
+const { useState, useEffect, useCallback, useRef, useMemo, useDeferredValue } = React;
 
 const P = { K:"♔",Q:"♕",R:"♖",B:"♗",N:"♘",P:"♙",k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟" };
 const PIECE_IMG_CODE = { K:'wk',Q:'wq',R:'wr',B:'wb',N:'wn',P:'wp',k:'bk',q:'bq',r:'br',b:'bb',n:'bn',p:'bp' };
@@ -159,6 +159,25 @@ const OPENINGS = [
     mistakes:[
       {atIndex:3,wrongMove:{from:"f8",to:"c5",san:"Bc5"},punishment:{from:"f3",to:"e5",san:"Nxe5"},hint:"Bc5 doesn't protect e5 — Nxe5! grabs a free pawn"},
       {atIndex:7,wrongMove:{from:"d7",to:"d6",san:"d6"},punishment:{from:"d4",to:"f5",san:"Nf5"},hint:"d6 is passive — Nf5! grabs a dominant outpost attacking g7 and e7"},
+    ],
+  },
+  {
+    id:"london-system", name:"London System", eco:"D02", color:"white", category:"London",
+    description:"Classic London shell: Bf4, e3, Nf3, Bd3, Nbd2, c3, then castle into a sturdy middlegame.",
+    tip:"Build the setup first. Bf4 and Bd3 point at h7, Nbd2+c3 support e4 later, and O-O keeps everything safe.",
+    moves:[
+      {from:"d2",to:"d4",san:"d4"},{from:"d7",to:"d5",san:"d5"},
+      {from:"c1",to:"f4",san:"Bf4"},{from:"g8",to:"f6",san:"Nf6"},
+      {from:"e2",to:"e3",san:"e3"},{from:"e7",to:"e6",san:"e6"},
+      {from:"g1",to:"f3",san:"Nf3"},{from:"c7",to:"c5",san:"c5"},
+      {from:"f1",to:"d3",san:"Bd3"},{from:"b8",to:"c6",san:"Nc6"},
+      {from:"b1",to:"d2",san:"Nbd2"},{from:"f8",to:"d6",san:"Bd6"},
+      {from:"c2",to:"c3",san:"c3"},{from:"e8",to:"g8",san:"O-O",extra:{castle:true,rookFrom:"h8",rookTo:"f8"}},
+      {from:"e1",to:"g1",san:"O-O",extra:{castle:true,rookFrom:"h1",rookTo:"f1"}},
+    ],
+    mistakes:[
+      {atIndex:7,wrongMove:{from:"c5",to:"d4",san:"cxd4"},punishment:{from:"e3",to:"d4",san:"exd4"},hint:"cxd4 helps you clarify the center — exd4 keeps the London structure healthy and opens the bishop."},
+      {atIndex:11,wrongMove:{from:"d8",to:"c7",san:"Qc7"},punishment:{from:"f4",to:"g3",san:"Bg3"},hint:"Qc7 is slow — Bg3 keeps the bishop pair and leaves you ready for Re1 and e4."},
     ],
   },
   {
@@ -512,7 +531,44 @@ const OPENINGS = [
   },
 ];
 
-const initSR = () => { const d = {}; OPENINGS.forEach(o => { d[o.id] = {box:1,correct:0,incorrect:0,lastDrilled:0,streak:0}; }); return d; };
+const STORAGE_KEY = "chess-trainer-state-v2";
+const normalizeSR = (saved = {}) => ({
+  box: Math.min(5, Math.max(1, Number(saved.box) || 1)),
+  correct: Math.max(0, Number(saved.correct) || 0),
+  incorrect: Math.max(0, Number(saved.incorrect) || 0),
+  lastDrilled: Math.max(0, Number(saved.lastDrilled) || 0),
+  streak: Math.max(0, Number(saved.streak) || 0),
+});
+const buildSRState = (seed = {}) => {
+  const d = {};
+  OPENINGS.forEach(o => { d[o.id] = normalizeSR(seed[o.id]); });
+  return d;
+};
+const initSR = seed => buildSRState(seed);
+const loadAppState = () => {
+  const fallback = { sr:initSR(), session:1, filter:"all", category:"all", query:"" };
+  if (typeof window === "undefined") return fallback;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return fallback;
+    const saved = JSON.parse(raw);
+    return {
+      sr:initSR(saved?.sr),
+      session:Math.max(1, Number(saved?.session) || 1),
+      filter:["all","white","black"].includes(saved?.filter) ? saved.filter : "all",
+      category:typeof saved?.category === "string" ? saved.category : "all",
+      query:typeof saved?.query === "string" ? saved.query : "",
+    };
+  } catch (err) {
+    return fallback;
+  }
+};
+const getLineLengthLabel = opening => opening.branchAt !== undefined ? `${opening.moves.length}+branch` : `${opening.moves.length}`;
+const getMovePreview = (opening, limit = 8) => {
+  const sans = opening.moves.slice(0, limit).map(move => move.san);
+  const suffix = opening.moves.length > limit || opening.branchAt !== undefined ? " ..." : "";
+  return sans.join(" ") + suffix;
+};
 const boxIntervals = {1:1,2:2,3:4,4:8,5:16};
 const boxLabels = {1:"New",2:"Learning",3:"Familiar",4:"Solid",5:"Mastered"};
 const boxColors = {
@@ -522,8 +578,12 @@ const boxColors = {
   4:{bg:"#DCFCE7",border:"#22C55E",text:"#15803D",dot:"#22C55E"},
   5:{bg:"#E0F2FE",border:"#0EA5E9",text:"#0369A1",dot:"#0EA5E9"},
 };
+const getDueOpenings = (sr, session) => OPENINGS.filter(o => {
+  const s = sr[o.id] || { box:1, lastDrilled:0 };
+  return session - s.lastDrilled >= boxIntervals[s.box];
+});
 const getNextDrill = (sr, session) => {
-  const due = OPENINGS.filter(o => { const s = sr[o.id]; return s && session - s.lastDrilled >= boxIntervals[s.box]; });
+  const due = getDueOpenings(sr, session);
   if (!due.length) return OPENINGS.reduce((best, o) => (!best || (sr[o.id]?.box||1) < (sr[best.id]?.box||1)) ? o : best, null);
   due.sort((a, b) => (sr[a.id]?.box||1) - (sr[b.id]?.box||1)); return due[0];
 };
@@ -976,7 +1036,7 @@ const ChessComImport = ({ onBack }) => {
   const [results,setResults]=useState(null);const [error,setError]=useState(null);
   const classify=(moves,zc)=>{
     if(moves.length<2)return"Unknown";const[w,b]=[moves[0],moves[1]];
-    if(zc==="white"){if(w==="e4"){if(b==="e5"){if(moves[2]==="Nf3"){if(moves[3]==="Nc6"&&moves[4]==="d4")return"Scotch ✅";if(moves[3]==="Nf6")return"Petrov"+(moves[4]==="Nxe5"?" ✅":" ⚠️");if(moves[3]==="d6")return"Philidor ✅";}return`e4 e5 ${moves[2]}`;}if(b==="c5")return"Sicilian"+(moves[2]==="c3"?" (Alapin) ✅":"");if(b==="e6")return"French ✅";if(b==="c6")return"Caro-Kann ✅";if(b==="d5")return"Scandinavian ✅";if(b==="d6")return"Pirc ✅";if(b==="g6")return"Modern ✅";return`e4 ${b}`;}return`${w}...`;}
+    if(zc==="white"){if(w==="e4"){if(b==="e5"){if(moves[2]==="Nf3"){if(moves[3]==="Nc6"&&moves[4]==="d4")return"Scotch ✅";if(moves[3]==="Nf6")return"Petrov"+(moves[4]==="Nxe5"?" ✅":" ⚠️");if(moves[3]==="d6")return"Philidor ✅";}return`e4 e5 ${moves[2]}`;}if(b==="c5")return"Sicilian"+(moves[2]==="c3"?" (Alapin) ✅":"");if(b==="e6")return"French ✅";if(b==="c6")return"Caro-Kann ✅";if(b==="d5")return"Scandinavian ✅";if(b==="d6")return"Pirc ✅";if(b==="g6")return"Modern ✅";return`e4 ${b}`;}if(w==="d4"){if(moves[2]==="Bf4"||(moves[2]==="Nf3"&&moves[4]==="Bf4"))return"London ✅";if(b==="d5"&&moves[2]==="c4")return"Queen's Gambit";return`d4 ${b}`;}return`${w}...`;}
     else{if(w==="e4"&&b==="e5"){if(moves[2]==="Nf3"&&moves[3]==="Nc6"){if(moves[4]==="Bc4")return"Italian ✅";if(moves[4]==="Bb5")return"Ruy Lopez ✅";if(moves[4]==="d4")return"Scotch";}if(moves[2]==="Bc4")return"Bishop's Opening ✅";if(moves[2]==="Nc3")return"Vienna ✅";if(moves[2]==="f4")return"King's Gambit ✅";return`e4 e5 ${moves[2]}`;}if(w==="d4"){if(b==="d5"){if(moves[2]==="c4")return"QGD ✅";if(moves[2]==="Bf4"||(moves[2]==="Nf3"&&moves[4]==="Bf4"))return"London ✅";return`d4 d5 ${moves[2]}`;}return`d4 ${b}`;}if(w==="c4")return"English ✅";return`${w}...`;}
   };
   const fetchGames=async()=>{
@@ -1359,9 +1419,13 @@ const TacticsView = ({ onBack }) => {
 
 
 function App() {
-  const [sr,setSR]=useState(initSR);const [session,setSession]=useState(1);const [view,setView]=useState("dashboard");
-  const [currentOpening,setCurrentOpening]=useState(null);const [filter,setFilter]=useState("all");
-  useEffect(()=>{setSR(prev=>{const n={...prev};OPENINGS.forEach(o=>{if(!n[o.id])n[o.id]={box:1,correct:0,incorrect:0,lastDrilled:0,streak:0};});return n;});},[]);
+  const persisted = useMemo(loadAppState, []);
+  const [sr,setSR]=useState(()=>persisted.sr);const [session,setSession]=useState(()=>persisted.session);const [view,setView]=useState("dashboard");
+  const [currentOpening,setCurrentOpening]=useState(null);const [filter,setFilter]=useState(()=>persisted.filter);
+  const [categoryFilter,setCategoryFilter]=useState(()=>persisted.category);const [query,setQuery]=useState(()=>persisted.query);
+  const deferredQuery=useDeferredValue(query.trim().toLowerCase());
+  useEffect(()=>{setSR(prev=>buildSRState(prev));},[]);
+  useEffect(()=>{try{window.localStorage.setItem(STORAGE_KEY,JSON.stringify({sr,session,filter,category:categoryFilter,query}));}catch(err){}},[sr,session,filter,categoryFilter,query]);
   const startDrill=o=>{setCurrentOpening(o);setView("drill");};
   const smartDrill=()=>{const n=getNextDrill(sr,session);if(n)startDrill(n);};
   const handleBack=()=>{setView("dashboard");setSession(prev=>prev+1);};
@@ -1369,12 +1433,22 @@ function App() {
   const totalI=Object.values(sr).reduce((s,v)=>s+(v.incorrect||0),0);
   const avgBox=(Object.values(sr).reduce((s,v)=>s+(v.box||1),0)/OPENINGS.length).toFixed(1);
   const solidCount=Object.values(sr).filter(v=>(v.box||1)>=4).length;
-  const filtered=filter==="all"?OPENINGS:OPENINGS.filter(o=>o.color===filter);
+  const dueCount=getDueOpenings(sr,session).length;
+  const colorFiltered=useMemo(()=>filter==="all"?OPENINGS:OPENINGS.filter(o=>o.color===filter),[filter]);
+  const categories=useMemo(()=>["all",...Array.from(new Set(colorFiltered.map(o=>o.category)))],[colorFiltered]);
+  useEffect(()=>{if(categoryFilter!=="all"&&!categories.includes(categoryFilter))setCategoryFilter("all");},[categoryFilter,categories]);
+  const filtered=useMemo(()=>colorFiltered.filter(o=>{
+    const matchesCategory=categoryFilter==="all"||o.category===categoryFilter;
+    const haystack=[o.name,o.eco,o.category,o.description,getMovePreview(o,12)].join(" ").toLowerCase();
+    return matchesCategory&&(!deferredQuery||haystack.includes(deferredQuery));
+  }),[colorFiltered,categoryFilter,deferredQuery]);
+  const whiteFiltered=filtered.filter(o=>o.color==="white");
+  const blackFiltered=filtered.filter(o=>o.color==="black");
   if(view==="import")return(<div style={{minHeight:"100vh",padding:16,background:"#F5F0E8"}}><ChessComImport onBack={handleBack}/></div>);
   if(view==="blind")return(<div style={{minHeight:"100vh",padding:16,display:"flex",justifyContent:"center",background:"#F5F0E8"}}><BlindDrillView sr={sr} setSR={setSR} session={session} onBack={handleBack}/></div>);
   if(view==="tactics")return(<div style={{minHeight:"100vh",padding:16,display:"flex",justifyContent:"center",background:"#F5F0E8"}}><TacticsView onBack={handleBack}/></div>);
   if(view==="drill"&&currentOpening)return(<div style={{minHeight:"100vh",padding:16,display:"flex",justifyContent:"center",background:"#F5F0E8"}}><DrillView opening={currentOpening} sr={sr} setSR={setSR} session={session} onBack={handleBack}/></div>);
-  const Row=({o})=>{const s=sr[o.id]||{box:1,streak:0};const bc=boxColors[s.box];return(
+  const Row=({o})=>{const s=sr[o.id]||{box:1,streak:0,lastDrilled:0};const bc=boxColors[s.box];const isDue=session-s.lastDrilled>=boxIntervals[s.box];return(
     <button onClick={()=>startDrill(o)} style={{
       width:"100%",textAlign:"left",padding:"12px 16px",borderRadius:14,border:`1.5px solid ${bc.border}40`,
       background:"#FFFFFF",cursor:"pointer",transition:"all 0.15s",display:"block",
@@ -1383,14 +1457,18 @@ function App() {
     onMouseOver={e=>{e.currentTarget.style.transform="translateX(3px)";e.currentTarget.style.boxShadow="0 4px 12px rgba(45,43,107,0.1)";}}
     onMouseOut={e=>{e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="0 1px 3px rgba(45,43,107,0.06)";}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <div><span style={{fontWeight:700,color:"#1A1A2E",fontSize:14}}>{o.name}</span><span style={{color:"#8B8BA0",fontSize:12,marginLeft:8}}>{o.eco}</span>{o.branchAt!==undefined&&<span style={{color:"#7C3AED",fontSize:12,marginLeft:4}}>🔀</span>}</div>
+        <div><span style={{fontWeight:700,color:"#1A1A2E",fontSize:14}}>{o.name}</span><span style={{color:"#8B8BA0",fontSize:12,marginLeft:8}}>{o.eco}</span>{o.branchAt!==undefined&&<span style={{color:"#7C3AED",fontSize:12,marginLeft:4}}>🔀</span>}{isDue&&<span style={{fontSize:10,fontWeight:800,color:"#E8722A",marginLeft:8,letterSpacing:"0.04em",textTransform:"uppercase"}}>Due</span>}</div>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
           {s.streak>=3&&<span style={{fontSize:12}}>🔥{s.streak}</span>}
           <div style={{width:8,height:8,borderRadius:4,background:bc.dot}}/>
           <span style={{fontSize:12,fontWeight:700,color:bc.text}}>{boxLabels[s.box]}</span>
         </div>
       </div>
-      <div style={{fontSize:11,color:"#8B8BA0",marginTop:3}}>{o.category} • {o.branchAt?`${o.moves.length}+branch`:o.moves.length} moves{o.mistakes?.length>0?" • 💥":""}</div>
+      <div style={{fontSize:12,color:"#4B5563",marginTop:7,lineHeight:1.45}}>{o.description}</div>
+      <div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:8}}>
+        <span style={{fontSize:11,color:"#8B8BA0"}}>{o.category} • {getLineLengthLabel(o)} moves{o.mistakes?.length>0?" • 💥":""}</span>
+      </div>
+      <div style={{fontSize:11,color:"#8B8BA0",marginTop:8,fontFamily:"ui-monospace,SFMono-Regular,Menlo,monospace",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{getMovePreview(o,10)}</div>
     </button>
   );};
   return(
@@ -1409,33 +1487,53 @@ function App() {
             </div>
           ))}
         </div>
-        <button onClick={smartDrill} style={{width:"100%",marginBottom:10,padding:"16px 0",borderRadius:16,fontWeight:800,fontSize:17,background:"#E8722A",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(232,114,42,0.3)",letterSpacing:"-0.01em",transition:"transform 0.1s",}} onMouseDown={e=>e.currentTarget.style.transform="scale(0.98)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}>⚡ Learn Openings</button>
+        <button onClick={smartDrill} style={{width:"100%",marginBottom:10,padding:"16px 0",borderRadius:16,fontWeight:800,fontSize:17,background:"#E8722A",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(232,114,42,0.3)",letterSpacing:"-0.01em",transition:"transform 0.1s",}} onMouseDown={e=>e.currentTarget.style.transform="scale(0.98)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}>
+          {`⚡ Learn Openings${dueCount>0?` • ${dueCount} due`:""}`}
+        </button>
         <button onClick={()=>setView("blind")} style={{width:"100%",marginBottom:10,padding:"16px 0",borderRadius:16,fontWeight:800,fontSize:17,background:"#5B4DA0",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(91,77,160,0.3)",letterSpacing:"-0.01em",transition:"transform 0.1s",}} onMouseDown={e=>e.currentTarget.style.transform="scale(0.98)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}>🎲 Practice Openings</button>
         <button onClick={()=>setView("tactics")} style={{width:"100%",marginBottom:10,padding:"16px 0",borderRadius:16,fontWeight:800,fontSize:17,background:"linear-gradient(135deg, #059669, #10B981)",color:"white",border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(5,150,105,0.3)",letterSpacing:"-0.01em",transition:"transform 0.1s",}} onMouseDown={e=>e.currentTarget.style.transform="scale(0.98)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}>🧩 Practice Tactics</button>
         <button onClick={()=>setView("import")} style={{width:"100%",marginBottom:20,padding:"12px 0",borderRadius:14,fontWeight:600,fontSize:13,background:"#FFFFFF",color:"#5B4DA0",border:"1.5px solid #E2DFD6",cursor:"pointer",boxShadow:"0 1px 3px rgba(45,43,107,0.04)"}}>📥 Import from Chess.com</button>
-        <div style={{display:"flex",gap:6,marginBottom:16}}>
-          {["all","white","black"].map(f=>(
-            <button key={f} onClick={()=>setFilter(f)} style={{
-              padding:"6px 16px",borderRadius:99,fontSize:13,fontWeight:600,cursor:"pointer",transition:"all 0.15s",
-              background:filter===f?"#2D2B6B":"#FFFFFF",
-              color:filter===f?"#FFFFFF":"#8B8BA0",
-              border:`1.5px solid ${filter===f?"#2D2B6B":"#E2DFD6"}`,
-              boxShadow:filter===f?"0 2px 8px rgba(45,43,107,0.2)":"none",
-            }}>{f==="all"?"All Lines":f==="white"?"♔ White":"♚ Black"}</button>
-          ))}
+        <div style={{background:"#FFFFFF",borderRadius:16,padding:12,boxShadow:"0 1px 3px rgba(45,43,107,0.06)",marginBottom:16}}>
+          <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search openings, ECO codes, or moves" style={{width:"100%",padding:"11px 14px",borderRadius:12,border:"1.5px solid #E2DFD6",fontSize:14,outline:"none",color:"#1A1A2E",background:"#FCFBF8",marginBottom:10}} />
+          <div style={{display:"flex",gap:6,marginBottom:categories.length>1?10:0,flexWrap:"wrap"}}>
+            {["all","white","black"].map(f=>(
+              <button key={f} onClick={()=>{setFilter(f);setCategoryFilter("all");}} style={{
+                padding:"6px 16px",borderRadius:99,fontSize:13,fontWeight:600,cursor:"pointer",transition:"all 0.15s",
+                background:filter===f?"#2D2B6B":"#FFFFFF",
+                color:filter===f?"#FFFFFF":"#8B8BA0",
+                border:`1.5px solid ${filter===f?"#2D2B6B":"#E2DFD6"}`,
+                boxShadow:filter===f?"0 2px 8px rgba(45,43,107,0.2)":"none",
+              }}>{f==="all"?"All Lines":f==="white"?"♔ White":"♚ Black"}</button>
+            ))}
+          </div>
+          <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:8}}>
+            {categories.map(c=>(
+              <button key={c} onClick={()=>setCategoryFilter(c)} style={{
+                padding:"6px 12px",borderRadius:99,fontSize:12,fontWeight:700,cursor:"pointer",
+                background:categoryFilter===c?"#F3F0FF":"#FCFBF8",
+                color:categoryFilter===c?"#5B21B6":"#6B6B80",
+                border:`1.5px solid ${categoryFilter===c?"#C4B5FD":"#E2DFD6"}`,
+              }}>{c==="all"?"All Categories":c}</button>
+            ))}
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:12,color:"#8B8BA0"}}>
+            <span>{filtered.length} line{filtered.length===1?"":"s"} ready{deferredQuery?` for "${query.trim()}"`:""}</span>
+            {(filter!=="all"||categoryFilter!=="all"||query.trim())&&<button onClick={()=>{setFilter("all");setCategoryFilter("all");setQuery("");}} style={{background:"none",border:"none",color:"#5B4DA0",fontWeight:700,cursor:"pointer"}}>Reset</button>}
+          </div>
         </div>
-        {filtered.filter(o=>o.color==="white").length>0&&(filter==="all"||filter==="white")&&(
+        {whiteFiltered.length>0&&(filter==="all"||filter==="white")&&(
           <div style={{marginBottom:16}}>
             {filter==="all"&&<div style={{fontSize:11,fontWeight:800,color:"#5B4DA0",textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:8,paddingLeft:4}}>White Repertoire</div>}
-            <div style={{display:"flex",flexDirection:"column",gap:8}}>{filtered.filter(o=>o.color==="white").map(o=><Row key={o.id} o={o}/>)}</div>
+            <div style={{display:"flex",flexDirection:"column",gap:8}}>{whiteFiltered.map(o=><Row key={o.id} o={o}/>)}</div>
           </div>
         )}
-        {filtered.filter(o=>o.color==="black").length>0&&(filter==="all"||filter==="black")&&(
+        {blackFiltered.length>0&&(filter==="all"||filter==="black")&&(
           <div style={{marginBottom:16}}>
             {filter==="all"&&<div style={{fontSize:11,fontWeight:800,color:"#5B4DA0",textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:8,paddingLeft:4}}>Black Repertoire</div>}
-            <div style={{display:"flex",flexDirection:"column",gap:8}}>{filtered.filter(o=>o.color==="black").map(o=><Row key={o.id} o={o}/>)}</div>
+            <div style={{display:"flex",flexDirection:"column",gap:8}}>{blackFiltered.map(o=><Row key={o.id} o={o}/>)}</div>
           </div>
         )}
+        {filtered.length===0&&<div style={{padding:"18px 16px",borderRadius:16,background:"#FFFFFF",boxShadow:"0 1px 3px rgba(45,43,107,0.06)",fontSize:13,color:"#6B6B80",textAlign:"center"}}>No lines match that search yet. Try clearing the query or switching the color/category filter.</div>}
         <div style={{marginTop:24,padding:16,borderRadius:16,background:"#FFFFFF",boxShadow:"0 1px 3px rgba(45,43,107,0.06)",fontSize:13,color:"#6B6B80"}}>
           <div style={{fontWeight:800,color:"#2D2B6B",marginBottom:8}}>How This Works</div>
           <p style={{margin:"0 0 8px"}}><span style={{color:"#1A1A2E",fontWeight:600}}>Leitner spaced repetition</span> — 5 mastery boxes. Perfect runs promote, mistakes demote.</p>
@@ -1444,7 +1542,8 @@ function App() {
           </div>
           <p style={{margin:"0 0 4px"}}><span style={{color:"#1A1A2E",fontWeight:600}}>🎲 Blind</span> — random color, hidden name. <span style={{color:"#1A1A2E",fontWeight:600}}>💥 Curveball Mode</span> — opponent blunders, you punish.</p>
           <p style={{margin:"0 0 4px"}}><span style={{color:"#1A1A2E",fontWeight:600}}>🧩 Tactics</span> — solve puzzles with dynamic difficulty. Rated puzzles from beginner to master level.</p>
-          <p style={{margin:0}}><span style={{color:"#1A1A2E",fontWeight:600}}>🔀 Branching</span> — Scotch Nxc6: choose Schmidt (e5) or Mieses (Bd3) at the branch.</p>
+          <p style={{margin:"0 0 4px"}}><span style={{color:"#1A1A2E",fontWeight:600}}>🔎 Repertoire browser</span> — search by name, ECO, category, or move order and jump straight into a line.</p>
+          <p style={{margin:0}}><span style={{color:"#1A1A2E",fontWeight:600}}>💾 Local save</span> — progress, due counts, and filters persist between visits on this device.</p>
         </div>
       </div>
     </div>
